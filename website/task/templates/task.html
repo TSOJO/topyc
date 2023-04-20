@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ task.title }}{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row g-3">
+        <div class="col-lg">
+            <h3>{{ task.title }}</h3>
+            <p>{{ task.description }}</p>
+            {% if task.required_keywords %}
+            <p>You must use these keywords in your program:</p>
+            <div>
+                <ul class="list-group" id="keywords">
+                    {% for keyword in task.required_keywords %}
+                    <li class="list-group-item" data-keyword="{{ keyword }}">{{ keyword }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-lg">
+            <form id="code-form">
+                <div class="mb-3">
+                    <textarea name="user-code"></textarea>
+                    <div id="editor"></div>
+                </div>
+                <button type="button" class="btn btn-success d-flex align-items-center" id="run-button"></button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
