@@ -9,14 +9,28 @@
             <p>{{ task.description }}</p>
             {% if task.required_keywords %}
             <p>You must use these keywords in your program:</p>
-            <div>
+            <div class="mb-3">
                 <ul class="list-group" id="keywords">
                     {% for keyword in task.required_keywords %}
-                    <li class="list-group-item" data-keyword="{{ keyword }}">{{ keyword }}</li>
+                    <li class="list-group-item keyword" data-keyword="{{ keyword }}">{{ keyword }}</li>
                     {% endfor %}
                 </ul>
             </div>
             {% endif %}
+            <div class="border p-3">
+                <h4>Attempts</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time submitted (UTC)</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider" id="attempts-table-body">
+                        <!-- ! DB STUFF HERE-->
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="col-lg">
             <form id="code-form">
