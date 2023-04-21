@@ -40,7 +40,7 @@ window.onpageshow = function(event) {
     editor.session.setUseWrapMode(true)
     editor.setOptions({maxLines: 15, minLines: 15})
     
-    let textarea = $('textarea[name="user-code"]').hide()
+    let textarea = $('#user-code').hide()
 
     // If a keyword has not been used, we don't let the student submit.
     let canSubmit = false
