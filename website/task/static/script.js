@@ -12,7 +12,6 @@ let CROSS = [
 
 function checkKeywordPresent(text, keyword) {
     text = text.replaceAll('\n', ' ')
-    console.log(text)
     if (text.includes(' ' + keyword)) {
         return true;
     }
@@ -32,7 +31,18 @@ function resetRunButton() {
     ].join(''))
 }
 
+function keywordTooltip() {
+    const tooltip = bootstrap.Tooltip.getInstance('#run-button')
+    tooltip.show()
+}
+
 window.onpageshow = function(event) {
+    // Initialise tooltips.
+    $('[data-bs-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').on('mouseleave', function () {
+        $(this).tooltip('hide')
+    })
+    // Initialise ACE editor.
     let editor = ace.edit('editor')
     ace.config.set('basePath', 'https://cdn.jsdelivr.net/npm/ace-builds@1.13.1/src-noconflict/')
     editor.setTheme("ace/theme/textmate")
@@ -83,7 +93,15 @@ window.onpageshow = function(event) {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.status == '400') {
+                        keywordTooltip()
+                        resetRunButton()
+                        throw new Error('Code must contain the keywords.')
+                        // ! tooltip?
+                    }
+                    return response.json()
+                })
                 .then(data => {
                     let html = [
                         '<tr>',
@@ -135,7 +153,7 @@ window.onpageshow = function(event) {
                     resetRunButton()
                 })
         } else {
-            alert('probably display a warning of some kind....')
+            keywordTooltip()
         }
     })
 }

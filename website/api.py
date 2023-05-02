@@ -32,6 +32,14 @@ class DebugTask:
             )
         ]
 
+def check_keyword_present(text, keyword):
+    text = text.replace('\n', ' ')
+    if ' ' + keyword in text:
+        return True
+    if text.startswith(keyword):
+        return True
+    return False
+
 @api_bp.route('/run', methods=['POST'])
 def run():
     req_json = json.loads(request.data)
@@ -39,7 +47,9 @@ def run():
     # task_id = req_json.get('taskID')
     task = DebugTask()
     
-    print(code)
+    if not all(check_keyword_present(code, keyword) for keyword in task.required_keywords):
+        return '', 400
+                
     sandbox = IsolateSandbox()
     source_code = SourceCode(code, Language.cast_from_document(LANGUAGE))
     results = []
@@ -73,6 +83,9 @@ def run():
                 'message': message
             }
         )
+    
+    sandbox.cleanup()
+    
     response = {
         'time': datetime.utcnow().strftime('%a %-d %b %Y %H:%M'),
         'passes': passes,
