@@ -55,7 +55,7 @@ def run():
     results = []
     
     testcase_inputs = [tc.input for tc in task.testcases]
-    passes = True
+    passes_overall = True
     for testcase, (output, status, message) in zip(
         task.testcases,
         sandbox.get_outputs(
@@ -69,12 +69,12 @@ def run():
             for answer_keyword in testcase.answer_keywords:
                 if answer_keyword not in output:
                     verdict = Verdict.WA
-                    passes = False
+                    passes_overall = False
                     break
         else:
             # TLE, MLE.
             verdict = status
-            passes = False
+            passes_overall = False
         
         results.append(
             {
@@ -83,12 +83,10 @@ def run():
                 'message': message
             }
         )
-    
-    sandbox.cleanup()
-    
+            
     response = {
         'time': datetime.utcnow().strftime('%a %-d %b %Y %H:%M'),
-        'passes': passes,
+        'passesOverall': passes_overall,
         'results': results
     }
     # ! ADD TO DB HERE

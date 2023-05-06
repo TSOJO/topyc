@@ -98,16 +98,16 @@ window.onpageshow = function(event) {
                         keywordTooltip()
                         resetRunButton()
                         throw new Error('Code must contain the keywords.')
-                        // ! tooltip?
                     }
                     return response.json()
                 })
                 .then(data => {
+                    console.log(data.results)
                     let html = [
                         '<tr>',
                             '<td>' + data.time + '</td>',
                             '<td>']
-                    if (data.passes) {
+                    if (data.passesOverall) {
                         html.push(TICK)
                     } else {
                         html.push(CROSS)
@@ -127,7 +127,6 @@ window.onpageshow = function(event) {
                                         '<tbody>'
                     ])
                     data.results.forEach((element, index, _) => {
-                        // ! TODO: Error messages
                         html.push(...[
                                             '<tr>',
                                                 '<td>' + (index+1) + '</td>',
@@ -137,6 +136,40 @@ window.onpageshow = function(event) {
                             html.push(TICK)
                         } else {
                             html.push(CROSS)
+                        }
+                        if (element.message) {
+                            html.push(...[
+                                '<a data-bs-toggle="modal" data-bs-target="#detail' + (index+1) + '-modal" href="#"',
+                                '   class="text-decoration-none d-flex align-items-center">',
+                                '   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff6a00" class="bi bi-exclamation-circle" viewBox="0 0 16 16">',
+                                '      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>',
+                                '      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>',
+                                '   </svg>',
+                                '</a>',
+                                '<div class="modal fade" id="detail' + (index+1) + '-modal" tabindex="-1"',
+                                '    aria-labelledby="detail' + (index+1) + '-modal-label" aria-hidden="true">',
+                                '    <div class="modal-dialog">',
+                                '        <div class="modal-content">',
+                                '            <div class="modal-header">',
+                                '                <h1 class="modal-title fs-5" id="detail' + (index+1) + '-modal-label">Details',
+                                '                </h1>',
+                                '                <button type="button" class="btn-close" data-bs-dismiss="modal"',
+                                '                    aria-label="Close"></button>',
+                                '            </div>',
+                                '            <div class="modal-body">',
+                                '                <div style="white-space:pre-wrap;" class="consolas">',
+                                                     element.message,
+                                '                </div>',
+                                '            </div>',
+                                '            <div class="modal-footer">',
+                                '                <button type="button" class="btn btn-secondary"',
+                                '                    data-bs-dismiss="modal">Close</button>',
+                                '            </div>',
+                                '        </div>',
+                                '    </div>',
+                                '</div>',
+                            ])
+
                         }
                         html.push(...[
                                                 '</td>',
