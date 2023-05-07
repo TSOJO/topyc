@@ -1,14 +1,45 @@
-let TICK = [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#198754" class="bi bi-check-circle-fill" viewBox="0 0 16 16">',
-        '<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>',
-    '</svg>'
-].join('')
+function HTMLTick(tooltipText) {
+    return [
+        '<span>',
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#198754" class="bi bi-check-circle-fill" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-title="' + tooltipText + '">',
+                '<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>',
+            '</svg>',
+        '</span>'
+    ].join('')
+}
 
-let CROSS = [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#DF4957" class="bi bi-x-circle-fill" viewBox="0 0 16 16">',
-        '<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>',
-    '</svg>'
-].join('')
+function HTMLCross(tooltipText) {
+    return [
+        '<span>',
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#DF4957" class="bi bi-x-circle-fill" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-title="' + tooltipText + '">',
+                '<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>',
+            '</svg>',
+        '</span>'
+    ].join('')
+}
+
+function getLongVerdict(verdict) {
+    switch (verdict) {
+        case 'AC':
+            return 'Correct!'
+        case 'WA':
+            return 'Wrong Answer'
+        case 'TLE':
+            return 'Time Limit Exceeded'
+        case 'MLE':
+            return 'Memory Limit Exceeded'
+        case 'RE':
+            return 'Runtime Error'
+        case 'CE':
+            return 'Compilation Error'
+        case 'SE':
+            return 'System Error'
+        case 'WJ':
+            return 'Waiting for Judge'
+        default:
+            return 'Unknown Error'
+    }
+}
 
 function checkKeywordPresent(text, keyword) {
     text = text.replaceAll('\n', ' ')
@@ -42,6 +73,7 @@ window.onpageshow = function(event) {
     $('[data-bs-toggle="tooltip"]').on('mouseleave', function () {
         $(this).tooltip('hide')
     })
+
     // Initialise ACE editor.
     let editor = ace.edit('editor')
     ace.config.set('basePath', 'https://cdn.jsdelivr.net/npm/ace-builds@1.13.1/src-noconflict/')
@@ -85,7 +117,7 @@ window.onpageshow = function(event) {
             // Run code.
             let payload = {
                 code: textarea.val(),
-                // taskID: 
+                taskID: $(this).data('task-id')
             }
             
             fetch('/api/run',
@@ -102,15 +134,15 @@ window.onpageshow = function(event) {
                     return response.json()
                 })
                 .then(data => {
-                    console.log(data.results)
+                    console.log(data)
                     let html = [
                         '<tr>',
                             '<td>' + data.time + '</td>',
                             '<td>']
-                    if (data.passesOverall) {
-                        html.push(TICK)
+                    if (data.overallVerdict == 'AC') {
+                        html.push(HTMLTick(getLongVerdict(data.overallVerdict)))
                     } else {
-                        html.push(CROSS)
+                        html.push(HTMLCross(getLongVerdict(data.overallVerdict)))
                     }
                     html.push(...[
                             '</td>',
@@ -129,22 +161,20 @@ window.onpageshow = function(event) {
                     data.results.forEach((element, index, _) => {
                         html.push(...[
                                             '<tr>',
-                                                '<td>' + (index+1) + '</td>',
-                                                '<td>'
+                                                '<th>' + (index+1) + '</th>',
+                                                '<td class="d-flex align-items-center">'
                         ])
                         if (element.verdict === 'AC') {
-                            html.push(TICK)
+                            html.push(HTMLTick(getLongVerdict(element.verdict)))
                         } else {
-                            html.push(CROSS)
+                            html.push(HTMLCross(getLongVerdict(element.verdict)))
                         }
                         if (element.message) {
+                            // Error messages.
                             html.push(...[
                                 '<a data-bs-toggle="modal" data-bs-target="#detail' + (index+1) + '-modal" href="#"',
-                                '   class="text-decoration-none d-flex align-items-center">',
-                                '   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff6a00" class="bi bi-exclamation-circle" viewBox="0 0 16 16">',
-                                '      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>',
-                                '      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>',
-                                '   </svg>',
+                                '   class="text-decoration-none ms-2">',
+                                '   Details',
                                 '</a>',
                                 '<div class="modal fade" id="detail' + (index+1) + '-modal" tabindex="-1"',
                                 '    aria-labelledby="detail' + (index+1) + '-modal-label" aria-hidden="true">',
@@ -183,10 +213,17 @@ window.onpageshow = function(event) {
                             '</tr>'
                     ])
                     $('#attempts-table-body').append(html.join(''))
+                    // Reinitialise tooltips.
+                    $('[data-bs-toggle="tooltip"]').tooltip()
+                    $('[data-bs-toggle="tooltip"]').on('mouseleave', function () {
+                        $(this).tooltip('hide')
+                    })
                     resetRunButton()
                 })
         } else {
             keywordTooltip()
         }
+        
+        console.log('here')
     })
 }
