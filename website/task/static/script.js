@@ -134,7 +134,6 @@ window.onpageshow = function(event) {
                     return response.json()
                 })
                 .then(data => {
-                    console.log(data)
                     let html = [
                         '<tr>',
                             '<td>' + data.time + '</td>',
@@ -223,7 +222,5 @@ window.onpageshow = function(event) {
         } else {
             keywordTooltip()
         }
-        
-        console.log('here')
     })
 }

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 from website.model import db, Task
 
 task_bp = Blueprint(
-    'task_bp', __name__, template_folder='templates', static_folder='static'
+    'task_bp', __name__, template_folder='templates', static_folder='static', static_url_path='/task/static'
 )
 
 @task_bp.route('/<module_id>/<task_number>')

@@ -9,7 +9,7 @@ def init_app():
     from website.api import api_bp
     
     app.register_blueprint(home_bp, url_prefix='/')
-    app.register_blueprint(task_bp, url_prefix='/task')
+    app.register_blueprint(task_bp, url_prefix='/')
     app.register_blueprint(api_bp, url_prefix='/api')
     
     from .model import db
@@ -19,7 +19,7 @@ def init_app():
         db.create_all()
         
         # if app.config['DEV']:
-            # insert_debug_db(db)
+        #     insert_debug_db(db)
             # from website.model import Task, Module, Testcase
             
             # t = Task.query.get(1)
@@ -34,18 +34,40 @@ def init_app():
 def insert_debug_db(db):
     from website.model import Task, Module, Testcase
     
-    module = Module(
-        id=3,
-        module_name='Selection'
-    )
+    modules = [
+        Module(
+            id=3,
+            name='Selection'
+        ),
+        Module(
+            id=1,
+            name='Input'
+        )
+    ]
     
-    task = Task(
-        module_id=3,
-        task_number=2,
-        title='Age',
-        description='Ask the user for their age. If their age is greater than 50, print \'You are old\'. If their age is between 18 and 50, print \'You are an adult\'. If their age is below 18, print \'You are a child\'.',
-        required_keywords=['if', 'elif', 'else'],
-    )
+    tasks = [
+        Task(
+            module_id=3,
+            task_number=2,
+            title='Age',
+            description='Ask the user for their age. If their age is greater than 50, print \'You are old\'. If their age is between 18 and 50, print \'You are an adult\'. If their age is below 18, print \'You are a child\'.',
+            required_keywords=['if', 'elif', 'else'],
+        ),
+        Task(
+            module_id=1,
+            task_number=1,
+            title='something',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            task_number=1,
+            title='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        )
+    ]
     
     testcases = [
         Testcase(
@@ -65,5 +87,5 @@ def insert_debug_db(db):
         )
     ]
     
-    db.session.add_all([module, task, *testcases])
+    db.session.add_all([*modules, *tasks, *testcases])
     db.session.commit()

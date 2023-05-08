@@ -19,7 +19,7 @@ class Task(db.Model):
 
 class Module(db.Model):
     id = db.Column(db.INTEGER, primary_key=True)
-    module_name = db.Column(db.TEXT)
+    name = db.Column(db.TEXT)
     
     tasks = db.relationship('Task', back_populates='module', cascade='all, delete')
 
@@ -30,3 +30,8 @@ class Testcase(db.Model):
     answer_keywords = db.Column(db.ARRAY(db.TEXT))
     
     task = db.relationship('Task', back_populates='testcases')
+
+# TODO: User: ID, admin?, email, name, group
+# TODO: Group: ID, name, users
+# TODO: Submission: ID, user id, task id, time, overall verdict, (results)
+# TODO: Result: ID, submission id, testcase ID, verdict, message
