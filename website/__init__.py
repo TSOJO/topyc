@@ -62,7 +62,7 @@ def insert_debug_db(db):
         ),
         Task(
             module_id=2,
-            task_number=1,
+            task_number=2,
             title='somethingelse',
             description='something something',
             required_keywords=['asdf']

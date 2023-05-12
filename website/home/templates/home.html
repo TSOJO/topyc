@@ -17,7 +17,7 @@
                     <div class="accordion-body">
                         <ul class="list-group">
                             {% for task in module.tasks | sort(attribute='task_number') %}
-                            <a href="{{ url_for('task_bp.task', module_id=module.id, task_number=task.task_number) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('task_bp.task', module_number=module.module_number, task_number=task.task_number) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 <div class="fw-bold">{{ module.module_number }}.{{ task.task_number }}</div> {{ task.title }}
                                 <!-- TODO: Un-hardcode -->
                                 <span class="badge bg-success rounded-pill">

@@ -36,7 +36,7 @@ def run():
     
     testcases = task.testcases
     testcase_inputs = [tc.input for tc in testcases]
-    for testcase, (output, status, message) in zip(
+    for testcase, (output, result) in zip(
         testcases,
         sandbox.get_outputs(
             source_code,
@@ -46,27 +46,27 @@ def run():
         )
     ):
         verdict = Verdict.AC
-        if status == Verdict.AC:
+        if result.verdict == Verdict.AC:
             # AC status means code ran successfully. Now we see if output is correct.
             for answer_keyword in testcase.answer_keywords:
-                if answer_keyword not in output:
+                if answer_keyword.lower() not in output.lower():
                     verdict = Verdict.WA
                     break
         else:
             # TLE, MLE, etc.
-            verdict = status
+            verdict = result.verdict
         
         results.append(
             {
                 # 'output': output,
                 'verdict': verdict.cast_to_document(),
-                'message': message
+                'message': result.message
             }
         )
         raw_verdicts.append(verdict)
     
     overall_verdict = sandbox.decide_final_verdict(raw_verdicts)
-            
+    
     response = {
         'time': datetime.utcnow().strftime('%a %-d %b %Y %H:%M'),
         'overallVerdict': overall_verdict.cast_to_document(),
