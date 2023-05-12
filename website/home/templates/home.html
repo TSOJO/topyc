@@ -10,7 +10,7 @@
                 <h2 class="accordion-header">
                     <!-- TODO: If all done, tick here and close. -->
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
-                        {{ module.id }}. {{ module.name }}
+                        {{ module.module_number }}. {{ module.name }}
                     </button>
                 </h2>
                 <div id="module{{ module.id }}" class="accordion-collapse collapse show">
@@ -18,7 +18,7 @@
                         <ul class="list-group">
                             {% for task in module.tasks | sort(attribute='task_number') %}
                             <a href="{{ url_for('task_bp.task', module_id=module.id, task_number=task.task_number) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div class="fw-bold">{{ module.id }}.{{ task.task_number }}</div> {{ task.title }}
+                                <div class="fw-bold">{{ module.module_number }}.{{ task.task_number }}</div> {{ task.title }}
                                 <!-- TODO: Un-hardcode -->
                                 <span class="badge bg-success rounded-pill">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">

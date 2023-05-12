@@ -7,5 +7,6 @@ home_bp = Blueprint(
 
 @home_bp.route('/')
 def home():
-    modules = Module.query.order_by(Module.id).all()
+    modules = Module.query.order_by(Module.module_number).all()
+    print(modules)
     return render_template('home.html', modules=modules)

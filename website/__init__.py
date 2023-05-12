@@ -36,32 +36,32 @@ def insert_debug_db(db):
     
     modules = [
         Module(
-            id=3,
+            module_number=3,
             name='Selection'
         ),
         Module(
-            id=1,
+            module_number=1,
             name='Input'
         )
     ]
     
     tasks = [
         Task(
-            module_id=3,
+            module_id=1,
             task_number=2,
             title='Age',
             description='Ask the user for their age. If their age is greater than 50, print \'You are old\'. If their age is between 18 and 50, print \'You are an adult\'. If their age is below 18, print \'You are a child\'.',
             required_keywords=['if', 'elif', 'else'],
         ),
         Task(
-            module_id=1,
+            module_id=2,
             task_number=1,
             title='something',
             description='something something',
             required_keywords=['asdf']
         ),
         Task(
-            module_id=3,
+            module_id=2,
             task_number=1,
             title='somethingelse',
             description='something something',

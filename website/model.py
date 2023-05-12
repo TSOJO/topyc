@@ -12,13 +12,10 @@ class Task(db.Model):
     
     module = db.relationship('Module', back_populates='tasks')
     testcases = db.relationship('Testcase', back_populates='task', cascade='all, delete')
-    
-    __table_args__ = (
-        db.UniqueConstraint(module_id, task_number),
-    )
 
 class Module(db.Model):
-    id = db.Column(db.INTEGER, primary_key=True)
+    id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
+    module_number = db.Column(db.INTEGER)
     name = db.Column(db.TEXT)
     
     tasks = db.relationship('Task', back_populates='module', cascade='all, delete')
