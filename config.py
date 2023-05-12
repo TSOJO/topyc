@@ -1,4 +1,9 @@
+from dotenv import load_dotenv
 from os import environ
+
+load_dotenv()
+
+SECRET_KEY = 'abcd'
 
 if environ.get('DEV') == '1':
     DEV = True
@@ -9,4 +14,10 @@ TIME_LIMIT = 1000
 MEMORY_LIMIT = 256*1024
 LANGUAGE = 'PYTHON'
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:root@localhost/topyc'
+POSTGRES_USERNAME = environ.get('POSTGRES_USERNAME')
+POSTGRES_PASSWORD = environ.get('POSTGRES_PASSWORD')
+POSTGRES_HOST = environ.get('POSTGRES_HOST')
+POSTGRES_PORT = environ.get('POSTGRES_PORT')
+POSTGRES_DB = environ.get('POSTGRES_DB')
+
+SQLALCHEMY_DATABASE_URI = f'postgresql://{POSTGRES_USERNAME}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'

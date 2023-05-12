@@ -1,4 +1,7 @@
-from flask import Flask
+from flask import Flask, request
+from flask_login import LoginManager, current_user
+
+login_manager = LoginManager()
 
 def init_app():
     app = Flask(__name__)
@@ -6,14 +9,37 @@ def init_app():
     
     from website.home.routes import home_bp
     from website.task.routes import task_bp
+    from website.user.routes import user_bp
     from website.api import api_bp
     
     app.register_blueprint(home_bp, url_prefix='/')
     app.register_blueprint(task_bp, url_prefix='/')
+    app.register_blueprint(user_bp, url_prefix='/')
     app.register_blueprint(api_bp, url_prefix='/api')
     
-    from .model import db
+    from website.model import db, User
     db.init_app(app)
+    
+    login_manager.init_app(app)
+    login_manager.login_view = 'user_bp.login'
+    login_manager.login_message_category = 'error'
+    
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(user_id)
+    
+    @app.before_request
+    def restrict():
+        allowed_endpoints = (
+            login_manager.login_view,  # login page
+            'user_bp.register',
+            'user_bp.static',
+            'static',
+        )
+        if (not current_user.is_authenticated) and (
+            request.endpoint not in allowed_endpoints
+        ):
+            return login_manager.unauthorized()
     
     with app.app_context():
         db.create_all()
@@ -32,15 +58,15 @@ def init_app():
 
 
 def insert_debug_db(db):
-    from website.model import Task, Module, Testcase
+    from website.model import Task, Module, Testcase, User, Group
     
     modules = [
         Module(
-            module_number=3,
+            number=3,
             name='Selection'
         ),
         Module(
-            module_number=1,
+            number=1,
             name='Input'
         )
     ]
@@ -48,21 +74,21 @@ def insert_debug_db(db):
     tasks = [
         Task(
             module_id=1,
-            task_number=2,
+            number=2,
             title='Age',
             description='Ask the user for their age. If their age is greater than 50, print \'You are old\'. If their age is between 18 and 50, print \'You are an adult\'. If their age is below 18, print \'You are a child\'.',
             required_keywords=['if', 'elif', 'else'],
         ),
         Task(
             module_id=2,
-            task_number=1,
+            number=1,
             title='something',
             description='something something',
             required_keywords=['asdf']
         ),
         Task(
             module_id=2,
-            task_number=2,
+            number=2,
             title='somethingelse',
             description='something something',
             required_keywords=['asdf']
@@ -87,5 +113,29 @@ def insert_debug_db(db):
         )
     ]
     
-    db.session.add_all([*modules, *tasks, *testcases])
+    from werkzeug.security import generate_password_hash
+    
+    groups = [
+        Group(
+            name='1F1'
+        )
+    ]
+    
+    users = [
+        User(
+            email='john@tonbridge-school.org',
+            password_hash=generate_password_hash('john'),
+            name='John Stoodunt',
+            is_admin=False,
+            group_id=1
+        ),
+        User(
+            email='mark@tonbridge-school.org',
+            password_hash=generate_password_hash('mark'),
+            name='Mark Addmeen',
+            is_admin=True,
+        )
+    ]
+    
+    db.session.add_all([*modules, *tasks, *testcases, *groups, *users])
     db.session.commit()

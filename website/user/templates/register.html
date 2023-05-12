@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock title %}
+
+{% block content %}
+<form method="POST" class="needs-validation" novalidate>
+    <h2>Register</h2>
+    <div class="form-floating mb-3">
+        <input class="form-control" id="name" type="text" name="name" placeholder="John Doe" required />
+        <label for="name">Name</label>
+        <div class="invalid-feedback">
+            Please enter your name
+        </div>
+    </div>
+    <div class="form-floating mb-3">
+        <input class="form-control" id="email" type="email" name="email" placeholder="name@tonbridge-school.org" pattern="[\w.%+-]+@tonbridge-school\.org" required />
+        <label for="email">Email address</label>
+        <div class="invalid-feedback">
+            Please use your school email (@tonbridge-school.org)
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Register</button>
+</form>
+{% endblock content %}

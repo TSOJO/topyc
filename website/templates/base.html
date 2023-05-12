@@ -21,23 +21,78 @@
         </style>
     </head>
     <body>
-        <nav class="navbar bg-light px-4">
-            <div class="col text-start">
-                <a class="btn btn-outline-secondary" href="{{ url_for('home_bp.home') }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"></path>
-                    </svg>
-                </a>
-            </div>
-            <div class="col text-center d-none d-md-block">
-                <a href="{{ url_for('home_bp.home') }}">
-                    <img src="{{ url_for('static', filename='logo.png') }}" alt="ToPyC Logo" height="50" width="100" />
-                </a>
-            </div>
-            <div class="col text-end">
-                User stuff
+        {% if current_user.is_authenticated %}
+        <nav class="navbar navbar-expand-md bg-light px-2">
+            <div class="container-fluid">
+                <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item active">
+                            <a class="btn btn-outline-secondary" href="{{ url_for('home_bp.home') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                                    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"></path>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mx-auto order-0">
+                    <a class="navbar-brand mx-auto" href="#">
+                        <a class="text-decoration-none" href="{{ url_for('home_bp.home') }}">
+                            <img src="{{ url_for('static', filename='logo.png') }}" alt="ToPyC Logo" height="50" width="100" />
+                        </a>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".dual-collapse2">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                  {{ current_user.name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="{{ url_for('user_bp.settings') }}">Account settings</a></li>
+                                    {% if current_user.is_admin %}
+                                    <li><a class="dropdown-item" href="#">Admin</a></li>
+                                    {% endif %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('user_bp.logout') }}">Logout</a></li>
+                                </ul>
+                            </li>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="alert alert-danger alert-dismissable fade show d-flex justify-content-between"
+                             role="alert">
+                            {{ message }}
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success alert-dismissable fade show d-flex justify-content-between"
+                             role="alert">
+                            {{ message }}
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
         <div class="container p-3">
             {% block content %}{% endblock content %}

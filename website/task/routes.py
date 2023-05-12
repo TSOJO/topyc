@@ -9,8 +9,8 @@ task_bp = Blueprint(
 def task(module_number, task_number):
     task = db.first_or_404(
         Task.query.filter(
-            Task.module.has(module_number=module_number),
-            Task.task_number==task_number
+            Task.module.has(number=module_number),
+            Task.number==task_number
         )
     )
     return render_template('task.html', task=task)
