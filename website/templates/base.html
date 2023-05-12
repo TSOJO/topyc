@@ -55,7 +55,7 @@
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{{ url_for('user_bp.settings') }}">Account settings</a></li>
                                     {% if current_user.is_admin %}
-                                    <li><a class="dropdown-item" href="#">Admin</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_bp.admin') }}">Admin</a></li>
                                     {% endif %}
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{{ url_for('user_bp.logout') }}">Logout</a></li>

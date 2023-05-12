@@ -11,11 +11,13 @@ def init_app():
     from website.task.routes import task_bp
     from website.user.routes import user_bp
     from website.api import api_bp
+    from website.admin.routes import admin_bp
     
     app.register_blueprint(home_bp, url_prefix='/')
     app.register_blueprint(task_bp, url_prefix='/')
     app.register_blueprint(user_bp, url_prefix='/')
     app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(admin_bp, url_prefix='/admin')
     
     from website.model import db, User
     db.init_app(app)
@@ -117,7 +119,10 @@ def insert_debug_db(db):
     
     groups = [
         Group(
-            name='1F1'
+            name='1F1',
+        ),
+        Group(
+            name='1F2',
         )
     ]
     

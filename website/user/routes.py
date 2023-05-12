@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 import string
+from email.message import EmailMessage
+import ssl
+import smtplib
 
-from website.model import db, User
+from website.model import db, User, Group
+from config import GMAIL_EMAIL, GMAIL_APP_PASSWORD
 
 user_bp = Blueprint(
     'user_bp', __name__, template_folder='templates', static_folder='static', static_url_path='/user/static'
@@ -18,6 +22,27 @@ def check_tonbridge_email(email):
 def generate_password():
     alphabet = string.ascii_letters + string.digits
     return ''.join(secrets.choice(alphabet) for _ in range(PASSWORD_LENGTH))
+
+def send_email(to_email, subject, body):
+    email_message = EmailMessage()
+    email_message['From'] = GMAIL_EMAIL
+    email_message['To'] = to_email
+    email_message['Subject'] = subject
+    email_message.set_content(body)
+    
+    context = ssl.create_default_context()
+    
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls(context=context)
+        server.login(
+            user=GMAIL_EMAIL,
+            password=GMAIL_APP_PASSWORD
+        )
+        server.sendmail(
+            from_addr=GMAIL_EMAIL,
+            to_addrs=to_email,
+            msg=email_message.as_string()
+        )
 
 @user_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -44,6 +69,17 @@ def register():
         
         db.session.add(user)
         db.session.commit()
+        
+        send_email(
+            to_email=email,
+            subject='Your ToPyC password',
+            body=f'''
+            Hi {name},\n
+            Your password is: {password}\n
+            Best regards,\n
+            ToPyC
+            '''
+        )
         
         flash('Registered successfully - your password has been sent to your email', 'success')
         return redirect(url_for('user_bp.login'))
@@ -75,6 +111,18 @@ def logout():
     logout_user()
     return redirect(url_for('user_bp.login'))
 
-@user_bp.route('/settings')
+@user_bp.route('/settings', methods=['GET', 'POST'])
 def settings():
-    pass
+    if request.method == 'POST':
+        if 'name' in request.form:
+            current_user.name = request.form['name']
+            flash('Saved', 'success')
+        elif 'group' in request.form:
+            if request.form['group'] == '-1':  # `None` group
+                current_user.group_id = None
+            else:
+                current_user.group_id = request.form['group']
+            flash('Saved', 'success')
+        db.session.commit()
+    all_groups = Group.query.all()
+    return render_template('settings.html', all_groups=all_groups)
