@@ -16,7 +16,7 @@ def check_keyword_present(text, keyword):
         return True
     return False
 
-@api_bp.route('/run', methods=['POST'])
+@api_bp.route('/submit-code', methods=['POST'])
 def run():
     req_json = json.loads(request.data)
     code = req_json.get('code')

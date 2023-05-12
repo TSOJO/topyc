@@ -52,18 +52,18 @@ function checkKeywordPresent(text, keyword) {
     return false;
 }
 
-function resetRunButton() {
-    $('#run-button').prop('disabled', false)
-    $('#run-button').html([
+function resetSubmitButton() {
+    $('#submit-button').prop('disabled', false)
+    $('#submit-button').html([
         '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill me-1" viewBox="0 0 16 16">',
             '<path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path>',
         '</svg>',
-        'Run code'
+        'Submit code'
     ].join(''))
 }
 
 function keywordTooltip() {
-    const tooltip = bootstrap.Tooltip.getInstance('#run-button')
+    const tooltip = bootstrap.Tooltip.getInstance('#submit-button')
     tooltip.show()
 }
 
@@ -102,25 +102,25 @@ window.onpageshow = function(event) {
         })
     })
 
-    resetRunButton()
+    resetSubmitButton()
 
-    $('#run-button').click(function() {
+    $('#submit-button').click(function() {
         if (canSubmit) {
             textarea.val(editor.getValue())
             // Disable submit button.
             $(this).prop('disabled', true)
             // Replace text with a spinner.
             $(this).html(
-                '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Running...'
+                '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting...'
             )
 
-            // Run code.
+            // Submit code.
             let payload = {
                 code: textarea.val(),
                 taskID: $(this).data('task-id')
             }
             
-            fetch('/api/run',
+            fetch('/api/submit-code',
                 {
                     method: 'POST',
                     body: JSON.stringify(payload)
@@ -128,7 +128,7 @@ window.onpageshow = function(event) {
                 .then(response => {
                     if (response.status == '400') {
                         keywordTooltip()
-                        resetRunButton()
+                        resetSubmitButton()
                         throw new Error('Code must contain the keywords.')
                     }
                     return response.json()
@@ -217,7 +217,7 @@ window.onpageshow = function(event) {
                     $('[data-bs-toggle="tooltip"]').on('mouseleave', function () {
                         $(this).tooltip('hide')
                     })
-                    resetRunButton()
+                    resetSubmitButton()
                 })
         } else {
             keywordTooltip()
