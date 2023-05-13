@@ -56,8 +56,6 @@ def init_app():
             # db.session.delete(t)
             # db.session.commit()
             # # print(Task.query.get(1).testcases[0].answer_keywords)
-            
-    IsolateSandbox().cleanup_all()
     
     return app
 

@@ -80,6 +80,7 @@ def run():
                 message=result.message
             )
         )
+    sandbox.cleanup()  # in case `testcases == []`, in which case the above loop will not run
     
     overall_verdict = sandbox.decide_final_verdict(raw_verdicts)
     
