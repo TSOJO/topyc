@@ -8,7 +8,7 @@
             {% for module in modules %}
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                    <button class="accordion-button {% if module in user_done_modules %} collapsed {% endif %} row" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
+                    <button class="accordion-button {% if module in user_done_modules %} collapsed {% endif %} row mx-0" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
                         <span class="col-10">{{ module.number }}. {{ module.name }}</span>
                         {% if module in user_done_modules %}
                         <span class="badge bg-success rounded-pill col-auto">
