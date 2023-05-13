@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
+from isolate_wrapper import Verdict
+
 db = SQLAlchemy()
 
 class Task(db.Model):
@@ -13,6 +15,7 @@ class Task(db.Model):
     
     module = db.relationship('Module', back_populates='tasks')
     testcases = db.relationship('Testcase', back_populates='task', cascade='all, delete')
+    submissions = db.relationship('Submission', back_populates='task')
 
 class Module(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
@@ -23,11 +26,13 @@ class Module(db.Model):
 
 class Testcase(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
+    number = db.Column(db.INTEGER, nullable=False)
     task_id = db.Column(db.ForeignKey('task.id'), nullable=False)
     input = db.Column(db.TEXT)
     answer_keywords = db.Column(db.ARRAY(db.TEXT))
     
     task = db.relationship('Task', back_populates='testcases')
+    testcase_results = db.relationship('TestcaseResult', back_populates='testcase')
 
 class User(db.Model, UserMixin):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
@@ -38,6 +43,7 @@ class User(db.Model, UserMixin):
     group_id = db.Column(db.ForeignKey('group.id'))
     
     group = db.relationship('Group', back_populates='users')
+    submissions = db.relationship('Submission', back_populates='user')
 
 class Group(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
@@ -45,7 +51,23 @@ class Group(db.Model):
     
     users = db.relationship('User', back_populates='group')
 
-# TODO: User: ID, admin?, email, name, group
-# TODO: Group: ID, name, users
-# TODO: Submission: ID, user id, task id, time, overall verdict, (results)
-# TODO: Result: ID, submission id, testcase ID, verdict, message
+class Submission(db.Model):
+    id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.ForeignKey('user.id'))
+    task_id = db.Column(db.ForeignKey('task.id'))
+    time_submitted = db.Column(db.TIMESTAMP)
+    overall_verdict = db.Column(db.Enum(Verdict))
+    
+    user = db.relationship('User', back_populates='submissions')
+    task = db.relationship('Task', back_populates='submissions')
+    testcase_results = db.relationship('TestcaseResult', back_populates='submission')
+
+class TestcaseResult(db.Model):
+    id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
+    submission_id = db.Column(db.ForeignKey('submission.id'))
+    testcase_id = db.Column(db.ForeignKey('testcase.id'))
+    verdict = db.Column(db.Enum(Verdict))
+    message = db.Column(db.TEXT)
+    
+    submission = db.relationship('Submission', back_populates='testcase_results')
+    testcase = db.relationship('Testcase', back_populates='testcase_results')

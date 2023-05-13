@@ -18,6 +18,16 @@ function HTMLCross(tooltipText) {
     ].join('')
 }
 
+function HTMLBang(tooltipText) {
+    return [
+        '<span>',
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#702963" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-title="' + tooltipText + '">',
+                '<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>',
+            '</svg>',
+        '</span>'
+    ].join('')
+}
+
 function getLongVerdict(verdict) {
     switch (verdict) {
         case 'AC':
@@ -135,81 +145,64 @@ window.onpageshow = function(event) {
                 })
                 .then(data => {
                     let html = [
-                        '<tr>',
-                            '<td>' + data.time + '</td>',
-                            '<td>']
+                        '<tr class="d-flex">',
+                            '<td class="col-4">' + data.time + '</td>',
+                            '<td class="col-6 d-flex flex-wrap justify-content-start align-items-center" style="gap:5px;">']
+                    data.results.forEach((element, index, _) => {
+                        if (element.verdict === 'AC') {
+                            html.push(HTMLTick(getLongVerdict(element.verdict)))
+                        } else if (element.verdict === 'WA') {
+                            html.push(HTMLCross(getLongVerdict(element.verdict)))
+                        } else {
+                            if (element.message) {
+                                html.push(...[
+                                    '<div class="modal fade" id="detail' + (index+1) + '-modal" tabindex="-1"',
+                                    '    aria-labelledby="detail' + (index+1) + '-modal-label" aria-hidden="true">',
+                                    '    <div class="modal-dialog">',
+                                    '        <div class="modal-content">',
+                                    '            <div class="modal-header">',
+                                    '                <h1 class="modal-title fs-5" id="detail' + (index+1) + '-modal-label">Details',
+                                    '                </h1>',
+                                    '                <button type="button" class="btn-close" data-bs-dismiss="modal"',
+                                    '                    aria-label="Close"></button>',
+                                    '            </div>',
+                                    '            <div class="modal-body">',
+                                    '                <div style="white-space:pre-wrap;" class="consolas">',
+                                                            element.message,
+                                    '                </div>',
+                                    '            </div>',
+                                    '            <div class="modal-footer">',
+                                    '                <button type="button" class="btn btn-secondary"',
+                                    '                    data-bs-dismiss="modal">Close</button>',
+                                    '            </div>',
+                                    '        </div>',
+                                    '    </div>',
+                                    '</div>',
+                                    '<a data-bs-toggle="modal" data-bs-target="#detail' + (index+1) + '-modal" href="#">',
+                                ])
+                            }
+                            html.push(HTMLBang(getLongVerdict(element.verdict)))
+                            if (element.message) {
+                                html.push(...[
+                                    '</a>'
+                                ])
+                            }
+                        }
+                    })
+                    html.push(...[
+                            '</td>',
+                            '<td class="col-2 d-flex align-items-center">'
+                    ])
                     if (data.overallVerdict == 'AC') {
                         html.push(HTMLTick(getLongVerdict(data.overallVerdict)))
-                    } else {
+                    } else if (data.overallVerdict == 'WA') {
                         html.push(HTMLCross(getLongVerdict(data.overallVerdict)))
+                    } else {
+                        html.push(HTMLBang(getLongVerdict(data.overallVerdict)))
                     }
                     html.push(...[
                             '</td>',
-                            '</tr>',
-                            '<tr>',
-                                '<td colspan="2">',
-                                    '<table class="table mb-0">',
-                                        '<thead>',
-                                            '<tr>',
-                                                '<th scope="col">Test #</th>',
-                                                '<th scope="col">Result</th>',
-                                            '</tr>',
-                                        '</thead>',
-                                        '<tbody>'
-                    ])
-                    data.results.forEach((element, index, _) => {
-                        html.push(...[
-                                            '<tr>',
-                                                '<th>' + (index+1) + '</th>',
-                                                '<td class="d-flex align-items-center">'
-                        ])
-                        if (element.verdict === 'AC') {
-                            html.push(HTMLTick(getLongVerdict(element.verdict)))
-                        } else {
-                            html.push(HTMLCross(getLongVerdict(element.verdict)))
-                        }
-                        if (element.message) {
-                            // Error messages.
-                            html.push(...[
-                                '<a data-bs-toggle="modal" data-bs-target="#detail' + (index+1) + '-modal" href="#"',
-                                '   class="text-decoration-none ms-2">',
-                                '   Details',
-                                '</a>',
-                                '<div class="modal fade" id="detail' + (index+1) + '-modal" tabindex="-1"',
-                                '    aria-labelledby="detail' + (index+1) + '-modal-label" aria-hidden="true">',
-                                '    <div class="modal-dialog">',
-                                '        <div class="modal-content">',
-                                '            <div class="modal-header">',
-                                '                <h1 class="modal-title fs-5" id="detail' + (index+1) + '-modal-label">Details',
-                                '                </h1>',
-                                '                <button type="button" class="btn-close" data-bs-dismiss="modal"',
-                                '                    aria-label="Close"></button>',
-                                '            </div>',
-                                '            <div class="modal-body">',
-                                '                <div style="white-space:pre-wrap;" class="consolas">',
-                                                     element.message,
-                                '                </div>',
-                                '            </div>',
-                                '            <div class="modal-footer">',
-                                '                <button type="button" class="btn btn-secondary"',
-                                '                    data-bs-dismiss="modal">Close</button>',
-                                '            </div>',
-                                '        </div>',
-                                '    </div>',
-                                '</div>',
-                            ])
-
-                        }
-                        html.push(...[
-                                                '</td>',
-                                            '</tr>',
-                        ])
-                    })
-                    html.push(...[
-                                        '</tbody>',
-                                    '</table>',
-                                '</td>',
-                            '</tr>'
+                        '</tr>'
                     ])
                     $('#attempts-table-body').append(html.join(''))
                     // Reinitialise tooltips.

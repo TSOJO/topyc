@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify
+from flask_login import current_user
 import json
 from datetime import datetime
 
 from isolate_wrapper import IsolateSandbox, SourceCode, Language, Verdict
 from config import TIME_LIMIT, MEMORY_LIMIT, LANGUAGE
-from website.model import Task
+from website.model import db, Task, Submission, TestcaseResult
 
 api_bp = Blueprint('api_bp', __name__)
 
@@ -33,6 +34,13 @@ def run():
     source_code = SourceCode(code, Language.cast_from_document(LANGUAGE))
     results = []
     raw_verdicts = []
+    current_time = datetime.utcnow()
+    
+    submission = Submission(
+        user=current_user,
+        task=task,
+        time_submitted=current_time,
+    )
     
     testcases = task.testcases
     testcase_inputs = [tc.input for tc in testcases]
@@ -63,14 +71,25 @@ def run():
                 'message': result.message
             }
         )
+        
         raw_verdicts.append(verdict)
+        submission.testcase_results.append(
+            TestcaseResult(
+                testcase=testcase,
+                verdict=verdict,
+                message=result.message
+            )
+        )
     
     overall_verdict = sandbox.decide_final_verdict(raw_verdicts)
     
+    submission.overall_verdict = overall_verdict
+    db.session.add(submission)
+    db.session.commit()
+    
     response = {
-        'time': datetime.utcnow().strftime('%a %-d %b %Y %H:%M'),
+        'time': current_time.strftime('%d/%m/%Y %H:%M'),
         'overallVerdict': overall_verdict.cast_to_document(),
         'results': results
     }
-    # ! ADD TO DB HERE
     return jsonify(response)
