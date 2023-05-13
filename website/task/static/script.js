@@ -123,10 +123,11 @@ window.onpageshow = function(event) {
             $(this).html(
                 '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting...'
             )
+            let code = textarea.val()
 
             // Submit code.
             let payload = {
-                code: textarea.val(),
+                code: code,
                 taskID: $(this).data('task-id')
             }
             
@@ -144,6 +145,7 @@ window.onpageshow = function(event) {
                     return response.json()
                 })
                 .then(data => {
+                    let row_number = $('#attempts-table-body').children().length + 1
                     let html = [
                         '<tr class="d-flex">',
                             '<td class="col-4">' + data.time + '</td>',
@@ -156,12 +158,12 @@ window.onpageshow = function(event) {
                         } else {
                             if (element.message) {
                                 html.push(...[
-                                    '<div class="modal fade" id="detail' + (index+1) + '-modal" tabindex="-1"',
-                                    '    aria-labelledby="detail' + (index+1) + '-modal-label" aria-hidden="true">',
+                                    '<div class="modal fade" id="detail' + row_number + '-' + (index+1) + '-modal" tabindex="-1"',
+                                    '    aria-labelledby="detail' + row_number + '-' + (index+1) + '-modal-label" aria-hidden="true">',
                                     '    <div class="modal-dialog">',
                                     '        <div class="modal-content">',
                                     '            <div class="modal-header">',
-                                    '                <h1 class="modal-title fs-5" id="detail' + (index+1) + '-modal-label">Details',
+                                    '                <h1 class="modal-title fs-5" id="detail' + row_number + '-' + (index+1) + '-modal-label">Details',
                                     '                </h1>',
                                     '                <button type="button" class="btn-close" data-bs-dismiss="modal"',
                                     '                    aria-label="Close"></button>',
@@ -178,7 +180,7 @@ window.onpageshow = function(event) {
                                     '        </div>',
                                     '    </div>',
                                     '</div>',
-                                    '<a data-bs-toggle="modal" data-bs-target="#detail' + (index+1) + '-modal" href="#">',
+                                    '<a data-bs-toggle="modal" data-bs-target="#detail' + row_number + '-' + (index+1) + '-modal" href="#">',
                                 ])
                             }
                             html.push(HTMLBang(getLongVerdict(element.verdict)))
@@ -191,7 +193,7 @@ window.onpageshow = function(event) {
                     })
                     html.push(...[
                             '</td>',
-                            '<td class="col-2 d-flex align-items-center">'
+                            '<td class="col-2 d-flex justify-content-between align-items-center">'
                     ])
                     if (data.overallVerdict == 'AC') {
                         html.push(HTMLTick(getLongVerdict(data.overallVerdict)))
@@ -200,6 +202,32 @@ window.onpageshow = function(event) {
                     } else {
                         html.push(HTMLBang(getLongVerdict(data.overallVerdict)))
                     }
+                    html.push(...[
+                                '<div class="modal fade" id="code' + row_number + '-modal" tabindex="-1" aria-labelledby="code' + row_number + '-modal-label" aria-hidden="true">',
+                                    '<div class="modal-dialog">',
+                                        '<div class="modal-content">',
+                                            '<div class="modal-header">',
+                                                '<h1 class="modal-title fs-5" id="code' + row_number + '-modal-label">Code</h1>',
+                                                '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>',
+                                            '</div>',
+                                            '<div class="modal-body">',
+                                                '<div style="white-space:pre-wrap;" class="consolas">' + code + '</div>',
+                                            '</div>',
+                                            '<div class="modal-footer">',
+                                                '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>',
+                                            '</div>',
+                                        '</div>',
+                                    '</div>',
+                                '</div>',
+                                '<a data-bs-toggle="modal" data-bs-target="#code' + row_number + '-modal" href="#">',
+                                    '<span>',
+                                        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">',
+                                            '<path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>',
+                                            '<path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>',
+                                        '</svg>',
+                                    '</span>',
+                                '</a>'
+                    ])
                     html.push(...[
                             '</td>',
                         '</tr>'

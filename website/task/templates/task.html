@@ -19,7 +19,7 @@
             {% endif %}
             <div class="border p-3">
                 <h4>Attempts</h4>
-                <table class="table">
+                <table class="table" style="font-size:13px;">
                     <thead>
                         <tr class="d-flex">
                             <th scope="col" class="col-4">Time submitted (UTC)</th>
@@ -32,6 +32,7 @@
                         <tr class="d-flex">
                             <td class="col-4">{{ submission.time_submitted.strftime('%d/%m/%Y %H:%M') }}</td>
                             <td class="col-6 d-flex flex-wrap justify-content-start align-items-center" style="gap:5px;">
+                                {% set submission_loop = loop %}
                                 {% for testcase_result in submission.testcase_results %}
                                 {% if testcase_result.verdict | string == 'AC' %}
                                 <span>
@@ -47,11 +48,11 @@
                                 </span>
                                 {% else %}
                                 {% if testcase_result.message %}
-                                <div class="modal fade" id="detail{{ loop.index }}-modal" tabindex="-1" aria-labelledby="detail{{ loop.index }}-modal-label" aria-hidden="true">
+                                <div class="modal fade" id="detail{{ submission_loop.index }}-{{ loop.index }}-modal" tabindex="-1" aria-labelledby="detail{{ submission_loop.index }}-{{ loop.index }}-modal-label" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="detail{{ loop.index }}-modal-label">Details</h1>
+                                                <h1 class="modal-title fs-5" id="detail{{ submission_loop.index }}-{{ loop.index }}-modal-label">Details</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -63,7 +64,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a data-bs-toggle="modal" data-bs-target="#detail{{ loop.index }}-modal" href="#">
+                                <a data-bs-toggle="modal" data-bs-target="#detail{{ submission_loop.index }}-{{ loop.index }}-modal" href="#">
                                 {% endif %}
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#702963" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-title="{{ verdict_map[testcase_result.verdict | string] }}">
@@ -76,7 +77,7 @@
                                 {% endif %}
                                 {% endfor %}
                             </td>
-                            <td class="col-2 d-flex align-items-center">
+                            <td class="col-2 d-flex justify-content-between align-items-center">
                                 {% if submission.overall_verdict | string == 'AC' %}
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#198754" class="bi bi-check-circle-fill" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-title="Correct!">
@@ -96,6 +97,30 @@
                                     </svg>
                                 </span>
                                 {% endif %}
+                                <div class="modal fade" id="code{{ loop.index }}-modal" tabindex="-1" aria-labelledby="code{{ loop.index }}-modal-label" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="code{{ loop.index }}-modal-label">Code</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div style="white-space:pre-wrap;" class="consolas">{{ submission.source_code }}</div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a data-bs-toggle="modal" data-bs-target="#code{{ loop.index }}-modal" href="#">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                        </svg>
+                                    </span>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
