@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody class="table-group-divider" id="attempts-table-body">
-                        {% for submission in current_user.submissions | selectattr('task', 'equalto', task) %}
+                        {% for submission in current_user.submissions | selectattr('task', 'equalto', task) | sort(attribute='time_submitted') %}
                         <tr class="d-flex">
                             <td class="col-4">{{ submission.time_submitted.strftime('%d/%m/%Y %H:%M') }}</td>
                             <td class="col-6 d-flex flex-wrap justify-content-start align-items-center" style="gap:5px;">
@@ -47,7 +47,7 @@
                                 </span>
                                 {% else %}
                                 {% if testcase_result.message %}
-                                <div class="modal fade" id="detail{{ loop.index }}-modal" tabindex="-1" aria-labelledby="detaildetail{{ loop.index }}-modal-label" aria-hidden="true">
+                                <div class="modal fade" id="detail{{ loop.index }}-modal" tabindex="-1" aria-labelledby="detail{{ loop.index }}-modal-label" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">

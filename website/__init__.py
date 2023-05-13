@@ -1,6 +1,8 @@
 from flask import Flask, request
 from flask_login import LoginManager, current_user
 
+from isolate_wrapper import IsolateSandbox
+
 login_manager = LoginManager()
 
 def init_app():
@@ -55,6 +57,7 @@ def init_app():
             # db.session.commit()
             # # print(Task.query.get(1).testcases[0].answer_keywords)
             
+    IsolateSandbox().cleanup_all()
     
     return app
 
