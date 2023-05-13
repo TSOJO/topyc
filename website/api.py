@@ -40,6 +40,7 @@ def run():
         user=current_user,
         task=task,
         time_submitted=current_time,
+        source_code=code
     )
     
     testcases = task.testcases

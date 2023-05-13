@@ -57,6 +57,7 @@ class Submission(db.Model):
     task_id = db.Column(db.ForeignKey('task.id'))
     time_submitted = db.Column(db.TIMESTAMP)
     overall_verdict = db.Column(db.Enum(Verdict))
+    source_code = db.Column(db.TEXT)
     
     user = db.relationship('User', back_populates='submissions')
     task = db.relationship('Task', back_populates='submissions')
