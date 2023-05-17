@@ -68,6 +68,7 @@ class TestcaseResult(db.Model):
     submission_id = db.Column(db.ForeignKey('submission.id'))
     testcase_id = db.Column(db.ForeignKey('testcase.id'))
     verdict = db.Column(db.Enum(Verdict))
+    output = db.Column(db.TEXT)
     message = db.Column(db.TEXT)
     
     submission = db.relationship('Submission', back_populates='testcase_results')

@@ -44,6 +44,7 @@ def submit_code():
     )
     
     testcases = task.testcases
+    testcases.sort(key=lambda t: t.number)
     testcase_inputs = [tc.input for tc in testcases]
     for testcase, (output, result) in zip(
         testcases,
@@ -78,6 +79,7 @@ def submit_code():
             TestcaseResult(
                 testcase=testcase,
                 verdict=verdict,
+                output=output,
                 message=result.message
             )
         )

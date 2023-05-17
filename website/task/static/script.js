@@ -77,7 +77,7 @@ function keywordTooltip() {
     tooltip.show()
 }
 
-window.onpageshow = function(event) {
+window.onpageshow = () => {
     // Initialise tooltips.
     $('[data-bs-toggle="tooltip"]').tooltip()
     $('[data-bs-toggle="tooltip"]').on('mouseleave', function () {
@@ -232,7 +232,7 @@ window.onpageshow = function(event) {
                             '</td>',
                         '</tr>'
                     ])
-                    $('#attempts-table-body').append(html.join(''))
+                    $('#attempts-table-body').prepend(html.join(''))
                     // Reinitialise tooltips.
                     $('[data-bs-toggle="tooltip"]').tooltip()
                     $('[data-bs-toggle="tooltip"]').on('mouseleave', function () {
