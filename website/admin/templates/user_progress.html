@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ user.name }}'s progress{% endblock title %}
+
+{% block content %}
+<h3>
+    {{ user.name }}
+    <small class="text-muted">{{ user.email }}</small>
+</h3>
+<table class="table table-bordered" style="table-layout:fixed;">
+    <thead>
+        {% for module in modules | sort(attribute='number') %}
+        {% for task in module.tasks | sort(attribute='number') %}
+        <th scope="col">{{ module.number }}.{{ task.number }}</th>
+        {% endfor %}
+        {% endfor %}
+    </thead>
+    <tbody>
+        <tr>
+            {% for module in modules | sort(attribute='number') %}
+            {% for task in module.tasks | sort(attribute='number') %}
+            <td>{{ module.number }}.{{ task.number }}</td>
+            
+            {% endfor %}
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% endblock content %}

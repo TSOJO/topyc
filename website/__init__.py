@@ -78,21 +78,21 @@ def insert_debug_db(db):
         Task(
             module_id=1,
             number=2,
-            title='Age',
+            name='Age',
             description='Ask the user for their age. If their age is greater than 50, print \'You are old\'. If their age is between 18 and 50, print \'You are an adult\'. If their age is below 18, print \'You are a child\'.',
             required_keywords=['if', 'elif', 'else'],
         ),
         Task(
             module_id=2,
             number=1,
-            title='something',
+            name='something',
             description='something something',
             required_keywords=['asdf']
         ),
         Task(
             module_id=2,
             number=2,
-            title='somethingelse',
+            name='somethingelse',
             description='something something',
             required_keywords=['asdf']
         )

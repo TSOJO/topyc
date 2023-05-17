@@ -3,21 +3,34 @@
 
 {% block content %}
 <h3>Users</h3>
+{% for page in users_page.iter_pages() %}
+{% if page %}
+{% if page != users_page.page %}
+<a href="{{ url_for('admin_bp.users', page=page, per_page=request.args.get('per_page')) }}">{{ page }}</a>
+{% else %}
+<span class="fw-bold">{{ page }}</span>
+{% endif %}
+{% else %}
+<span>…</span>
+{% endif %}
+{% endfor %}
+<p>Showing {{ users_page.first }} - {{ users_page.last}} of {{users_page.total}}</p>
 <table class="table table-striped">
     <thead>
         <tr class="d-flex">
             <th scope="col" class="col-3">Email</th>
             <th scope="col" class="col-3">Name</th>
-            <th scope="col" class="col-3">Group</th>
-            <th scope="col" class="col-3"></th>
+            <th scope="col" class="col-2">Group</th>
+            <th scope="col" class="col-2"></th>
+            <th scope="col" class="col-2"></th>
         </tr>
     </thead>
     <tbody class="table-group-divider">
-        {% for user in users %}
+        {% for user in users_page %}
         <tr class="d-flex">
             <th scope="row" class="col-3 text-break">{{ user.email }}</th>
             <td class="col-3 text-break">{{ user.name }}</td>
-            <td class="col-3">
+            <td class="col-2">
                 <form method="post">
                     <input type="hidden" name="action" value="change_group" />
                     <input type="hidden" name="user_id" value="{{ user.id }}" />
@@ -29,7 +42,10 @@
                     </select>
                 </form>
             </td>
-            <td class="col-3">
+            <td class="col-2 text-center">
+                <a class="btn btn-primary" href="{{ url_for('admin_bp.user_progress', user_id=user.id) }}">View progress</a>
+            </td>
+            <td class="col-2">
                 <form method="post">
                     <div class="modal fade" id="confirm{{ loop.index }}-modal" tabindex="-1" aria-labelledby="confirm{{ loop.index }}-modal-label" aria-hidden="true">
                         <div class="modal-dialog">

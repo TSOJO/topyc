@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}{{ task.module.number }}.{{ task.number }} {{ task.title }}{% endblock title %}
+{% block title %}{{ task.module.number }}.{{ task.number }} {{ task.name }}{% endblock title %}
 
 {% block content %}
 <div class="container">
     <div class="row g-3">
         <div class="col-lg">
-            <h3><small class="text-muted">{{ task.module.number }}.{{ task.number }}</small> {{ task.title }}</h3>
+            <h3><small class="text-muted">{{ task.module.number }}.{{ task.number }}</small> {{ task.name }}</h3>
             <p>{{ task.description }}</p>
             {% if task.required_keywords %}
             <p>You must use these keywords in your program:</p>

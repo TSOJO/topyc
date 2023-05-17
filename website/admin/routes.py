@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, request, flash
 from flask_login import current_user
 
-from website.model import db, User, Group, Task
+from website.model import db, User, Group, Task, Module
 
 admin_bp = Blueprint(
     'admin_bp', __name__, template_folder='templates', static_folder='static'
@@ -28,9 +28,16 @@ def users():
             
         db.session.commit()
         flash('Saved', 'success')
-    users = User.query.order_by(User.email).all()
+    users_page = db.paginate(db.select(User).order_by(User.email))  # defaults to 20 per page and gets page number from `request.args`
     groups = Group.query.all()
-    return render_template('users.html', users=users, groups=groups)
+    return render_template('users.html', users_page=users_page, groups=groups)
+
+@admin_bp.route('/user/progress/<user_id>')
+def user_progress(user_id):
+    user = User.query.get(user_id)
+    tasks = Task.query.all()
+    modules = Module.query.all()
+    return render_template('user_progress.html', user=user, tasks=tasks, modules=modules)
 
 @admin_bp.route('/groups')
 def groups():

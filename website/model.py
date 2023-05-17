@@ -9,7 +9,7 @@ class Task(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     module_id = db.Column(db.ForeignKey('module.id'), nullable=False)
     number = db.Column(db.INTEGER, nullable=False)
-    title = db.Column(db.TEXT)
+    name = db.Column(db.TEXT)
     description = db.Column(db.TEXT)
     required_keywords = db.Column(db.ARRAY(db.TEXT))
     
