@@ -1,11 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, abort
 from flask_login import current_user
 import json
 from datetime import datetime
 
 from isolate_wrapper import IsolateSandbox, SourceCode, Language, Verdict
 from config import TIME_LIMIT, MEMORY_LIMIT, LANGUAGE
-from website.model import db, Task, Submission, TestcaseResult
+from website.model import db, Task, Submission, TestcaseResult, User, Group
 
 api_bp = Blueprint('api_bp', __name__)
 
@@ -18,7 +18,7 @@ def check_keyword_present(text, keyword):
     return False
 
 @api_bp.route('/submit-code', methods=['POST'])
-def run():
+def submit_code():
     req_json = json.loads(request.data)
     code = req_json.get('code')
     task_id = req_json.get('taskID')

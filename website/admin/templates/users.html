@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock title %}
+
+{% block content %}
+<h3>Users</h3>
+<table class="table table-striped">
+    <thead>
+        <tr class="d-flex">
+            <th scope="col" class="col-3">Email</th>
+            <th scope="col" class="col-3">Name</th>
+            <th scope="col" class="col-3">Group</th>
+            <th scope="col" class="col-3"></th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        {% for user in users %}
+        <tr class="d-flex">
+            <th scope="row" class="col-3 text-break">{{ user.email }}</th>
+            <td class="col-3 text-break">{{ user.name }}</td>
+            <td class="col-3">
+                <form method="post">
+                    <input type="hidden" name="action" value="change_group" />
+                    <input type="hidden" name="user_id" value="{{ user.id }}" />
+                    <select name="group_id" class="form-select user-group-select">
+                        <option value="-1" {% if not user.group %}selected{% endif %}>-</option>
+                        {% for group in groups %}
+                        <option value="{{ group.id }}" {% if user.group.id == group.id %}selected{% endif %}>{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </td>
+            <td class="col-3">
+                <form method="post">
+                    <div class="modal fade" id="confirm{{ loop.index }}-modal" tabindex="-1" aria-labelledby="confirm{{ loop.index }}-modal-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="confirm{{ loop.index }}-modal-label">Confirm deletion</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    This can't be undone.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Delete user</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="action" value="delete_user" />
+                    <input type="hidden" name="user_id" value="{{ user.id }}" />
+                    <div class="text-center">
+                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm{{ loop.index }}-modal">Delete user</a>
+                    </div>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

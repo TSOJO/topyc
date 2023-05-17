@@ -118,11 +118,8 @@ def settings():
             current_user.name = request.form['name']
             flash('Saved', 'success')
         elif 'group' in request.form:
-            if request.form['group'] == '-1':  # `None` group
-                current_user.group_id = None
-            else:
-                current_user.group_id = request.form['group']
+            current_user.group = Group.query.get(request.form['group_id'])
             flash('Saved', 'success')
         db.session.commit()
-    all_groups = Group.query.all()
-    return render_template('settings.html', all_groups=all_groups)
+    groups = Group.query.all()
+    return render_template('settings.html', groups=groups)

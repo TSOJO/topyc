@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Groups{% endblock title %}
+
+{% block content %}
+<h3>Groups</h3>
+<div class="row">
+    <div class="col-lg-6">
+        <table class="table table-striped">
+            <thead>
+                <tr class="d-flex">
+                    <th scope="col" class="col-6">Name</th>
+                    <th scope="col" class="col-3"></th>
+                    <th scope="col" class="col-3"></th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for group in groups %}
+                <tr class="d-flex">
+                    <th scope="row" class="col-6 text-break">{{ group.name }}</th>
+                    <td class="col-3">
+                        <a href="{{ url_for('admin_bp.progress', group_id=group.id) }}" class="text-decoration-none">
+                            View progress
+                        </a>
+                    </td>
+                    <td class="col-3">
+                        <a href="{{ url_for('admin_bp.edit_group', group_id=group.id) }}" class="text-decoration-none">
+                            Edit students
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

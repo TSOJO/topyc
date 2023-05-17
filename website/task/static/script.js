@@ -148,7 +148,7 @@ window.onpageshow = function(event) {
                     let row_number = $('#attempts-table-body').children().length + 1
                     let html = [
                         '<tr class="d-flex">',
-                            '<td class="col-4">' + data.time + '</td>',
+                            '<th scope="row" class="col-4">' + data.time + '</th>',
                             '<td class="col-6 d-flex flex-wrap justify-content-start align-items-center" style="gap:5px;">']
                     data.results.forEach((element, index, _) => {
                         if (element.verdict === 'AC') {

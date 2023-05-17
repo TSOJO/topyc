@@ -30,7 +30,7 @@
                     <tbody class="table-group-divider" id="attempts-table-body">
                         {% for submission in current_user.submissions | selectattr('task', 'equalto', task) | sort(attribute='time_submitted') %}
                         <tr class="d-flex">
-                            <td class="col-4">{{ submission.time_submitted.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <th scope="row" class="col-4">{{ submission.time_submitted.strftime('%d/%m/%Y %H:%M') }}</th>
                             <td class="col-6 d-flex flex-wrap justify-content-start align-items-center" style="gap:5px;">
                                 {% set submission_loop = loop %}
                                 {% for testcase_result in submission.testcase_results %}
