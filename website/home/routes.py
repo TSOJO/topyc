@@ -5,7 +5,7 @@ from website.model import db, Module, Task, Submission
 from isolate_wrapper import Verdict
 
 home_bp = Blueprint(
-    'home_bp', __name__, template_folder='templates', static_folder='static'
+    'home_bp', __name__, template_folder='templates', static_folder='static', static_url_path='/home/static'
 )
 
 @home_bp.route('/')

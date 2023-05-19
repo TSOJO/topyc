@@ -3,13 +3,16 @@
 
 {% block content %}
 <div class="row">
+    <div class="col-lg-3"></div>
     <div class="col-lg-6 mx-auto">
         <div class="accordion" id="task-listing">
             {% for module in modules %}
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button {% if module in user_done_modules %} collapsed {% endif %} row mx-0" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
-                        <span class="col-10">{{ module.number }}. {{ module.name }}</span>
+                        <span class="col-10">
+                            {{ module.number }}. {{ module.name }}
+                        </span>
                         {% set user_done_in_module = user_done_tasks | selectattr('module', 'equalto', module) | list | length %}
                         <span class="badge bg-{%- if user_done_in_module == module.tasks | length -%}success{%- else -%}secondary{%- endif %} rounded-pill col-auto">
                             {{ user_done_in_module }} / {{ module.tasks | length }}
@@ -18,21 +21,62 @@
                 </h2>
                 <div id="module{{ module.id }}" class="accordion-collapse collapse {% if module not in user_done_modules %} show {% endif %}">
                     <div class="accordion-body">
+                        {% if current_user.is_admin %}
+                        <div class="modal fade" id="edit-module{{ module.id }}-modal" tabindex="-1" aria-labelledby="edit-module{{ module.id }}-modal-label" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="edit-module{{ module.id }}-modal-label">New Module</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="post" action="{{ url_for('admin_bp.edit_module') }}" class="needs-validation" novalidate>
+                                        <input type="hidden" name="module_id" value="{{ module.id }}" />
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="module_number" class="form-label">Module number</label>
+                                                <input type="number" class="form-control" name="module_number" value="{{ module.number }}" id="module_number" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="module_name" class="form-label">Module name</label>
+                                                <input type="text" class="form-control" name="module_name" value="{{ module.name }}" id="module_name" required />
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#edit-module{{ module.id }}-modal">
+                            Edit module
+                        </a>
+                        {% endif %}
                         <ul class="list-group">
                             {% for task in module.tasks | sort(attribute='number') %}
-                            <a href="{{ url_for('task_bp.task', module_number=module.number, task_number=task.number) }}" class="list-group-item list-group-item-action">
-                                <div class="row">
-                                    <span class="fw-bold col-1">{{ module.number }}.{{ task.number }}</span> 
-                                    <span class="col-9">{{ task.name }}</span>
-                                    {% if task in user_done_tasks %}
-                                    <span class="badge bg-success rounded-pill ms-auto me-2 col-auto">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-                                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                                        </svg>
-                                    </span>
-                                    {% endif %}
+                            {% if current_user.is_admin %}
+                            <div class="row">
+                                <div class="col-9">
+                            {% endif %}
+                                    <a href="{{ url_for('task_bp.task', module_number=module.number, task_number=task.number) }}" class="list-group-item list-group-item-action">
+                                        <div class="row">
+                                            <span class="fw-bold col-1">{{ module.number }}.{{ task.number }}</span> 
+                                            <span class="col-9">{{ task.name }}</span>
+                                            {% if task in user_done_tasks %}
+                                            <span class="badge bg-success rounded-pill ms-auto me-2 col-auto">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                                                </svg>
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                            {% if current_user.is_admin %}
                                 </div>
-                            </a>
+                                <a class="text-decoration-none col-3" href="{{ url_for('admin_bp.edit_task', task_id=task.id) }}">Edit task</a>
+                            </div>
+                            {% endif %}
                             {% endfor %}
                         </ul>
                     </div>
@@ -40,6 +84,72 @@
             </div>
             {% endfor %}
         </div>
+    </div>
+    <div class="col-lg-3">
+        {% if current_user.is_admin %}
+        <div class="modal fade" id="new-module-modal" tabindex="-1" aria-labelledby="new-module-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="new-module-modal-label">New Module</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" action="{{ url_for('admin_bp.new_module') }}" class="needs-validation" novalidate>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="module_number" class="form-label">Module number</label>
+                                <input type="number" class="form-control" name="module_number" id="module_number" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="module_name" class="form-label">Module name</label>
+                                <input type="text" class="form-control" name="module_name" id="module_name" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-module-modal">
+            New Module
+        </a>
+        <div class="modal fade" id="new-task-modal" tabindex="-1" aria-labelledby="new-task-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="new-task-modal-label">New Task</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" action="{{ url_for('admin_bp.new_task') }}" class="needs-validation" novalidate>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="module_id" class="form-label">Module</label>
+                                <select id="module_id" name="module_id" class="form-select" required>
+                                    {% for module in modules %}
+                                    <option value="{{ module.id }}">{{ module.number }}. {{ module.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="task_number" class="form-label">Task number</label>
+                                <input type="number" class="form-control" name="task_number" id="task_number" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#new-task-modal">
+            New Task
+        </a>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}

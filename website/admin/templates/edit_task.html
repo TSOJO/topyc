@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Editing {{ task.module.number}}.{{ task.number }}: {{ task.name }}{% endblock title %}
+
+{% block content %}
+<h3>{{ task.module.number}}.{{ task.number }}: {{ task.name }}</h3>
+<div class="border p-4">
+    <form method="post" class="needs-validation" novalidate>
+        <div class="row mb-3 g-3">
+            <div class="col-md-6">
+                <label for="module" class="form-label">Module</label>
+                <select id="module" name="module" class="form-select" required>
+                    {% for module in modules | sort(attribute='number') %}
+                    <option value="{{ module.id }}" {% if module == task.module %} selected {% endif %}>{{ module.number }}. {{ module.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="number" class="form-label">Number</label>
+                <input type="number" class="form-control" name="number" value="{{ task.number }}" required />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" name="name" value="{% if task.name %}{{ task.name }}{% endif %}" />
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" name="description" rows="5">{% if task.description %}{{ task.description }}{% endif %}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Required keywords</label>
+            <textarea class="form-control consolas" name="description" rows="5">{% if task.required_keywords %}{{ task.required_keywords | join('\n') }}{% endif %}</textarea>
+            <div class="form-text">These are the keywords that the students must use in their program. Put each required keyword on its own line.</div>
+        </div>
+        <!-- TODO: testcases-->
+    </form>
+</div>
+{% endblock content %}

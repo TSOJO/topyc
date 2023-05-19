@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, request, flash, send_file
+from flask import Blueprint, render_template, abort, request, flash, send_file, redirect, url_for
 from flask_login import current_user
 from io import BytesIO
 from openpyxl import Workbook
@@ -175,6 +175,52 @@ def group_progress(group_id):
         verdict_map=verdict_map
     )
 
-@admin_bp.route('/tasks')
-def tasks():
-    return 'hehe'
+@admin_bp.route('/new-module', methods=['POST'])
+def new_module():
+    module_number = request.form['module_number']
+    module_name = request.form['module_name']
+    
+    module = Module(
+        number=module_number,
+        name=module_name
+    )
+    
+    db.session.add(module)
+    db.session.commit()
+    flash('Saved', 'success')
+    return redirect(url_for('home_bp.home'))
+
+@admin_bp.route('/edit-module', methods=['POST'])
+def edit_module():
+    module_id = request.form['module_id']
+    module_number = request.form['module_number']
+    module_name = request.form['module_name']
+    
+    module = Module.query.get_or_404(module_id)
+    module.number = module_number
+    module.name = module_name
+
+    db.session.commit()
+    flash('Saved', 'success')
+    return redirect(url_for('home_bp.home'))
+
+@admin_bp.route('/new-task', methods=['POST'])
+def new_task():
+    module_id = request.form['module_id']
+    task_number = request.form['task_number']
+    
+    task = Task(
+        number=task_number,
+        module_id=module_id
+    )
+    
+    db.session.add(task)
+    db.session.commit()
+    flash('Saved', 'success')
+    return redirect(url_for('admin_bp.edit_task', task_id=task.id))
+
+@admin_bp.route('/<task_id>/edit')
+def edit_task(task_id):
+    task = Task.query.get_or_404(task_id)
+    modules = Module.query.all()
+    return render_template('edit_task.html', task=task, modules=modules)

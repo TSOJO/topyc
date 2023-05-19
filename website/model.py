@@ -14,7 +14,7 @@ class Task(db.Model):
     required_keywords = db.Column(db.ARRAY(db.TEXT))
     
     module = db.relationship('Module', back_populates='tasks')
-    testcases = db.relationship('Testcase', back_populates='task', cascade='all, delete')
+    testcases = db.relationship('Testcase', back_populates='task', cascade='all, delete-orphan')
     submissions = db.relationship('Submission', back_populates='task')
 
 class Module(db.Model):
