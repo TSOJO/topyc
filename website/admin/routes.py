@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, abort, request, flash
+from flask import Blueprint, render_template, abort, request, flash, send_file
 from flask_login import current_user
+from io import BytesIO
+from openpyxl import Workbook
 
 from website.model import db, User, Group, Task, Module, Submission
 from isolate_wrapper import Verdict
@@ -36,6 +38,7 @@ def users():
             
         db.session.commit()
         flash('Saved', 'success')
+        
     users_page = db.paginate(db.select(User).order_by(User.email))  # defaults to 20 per page and gets page number from `request.args`
     groups = Group.query.all()
     return render_template('users.html', users_page=users_page, groups=groups)
@@ -45,10 +48,19 @@ def user_progress(user_id):
     user = User.query.get_or_404(user_id)
     tasks = Task.query.all()
     modules = Module.query.all()
-    correct_tasks = db.session.query(Task).join(Submission).filter(Submission.user_id == user_id, Submission.overall_verdict == Verdict.AC).distinct()
-    tasks_with_submissions = db.session.query(Task).join(Submission).filter(Task.submissions, Submission.user_id == user_id).distinct()
+    correct_tasks = db.session.query(Task) \
+                                        .join(Submission) \
+                                        .filter(Submission.user_id == user_id,
+                                                Submission.overall_verdict == Verdict.AC) \
+                                        .distinct()
+    tasks_with_submissions = db.session.query(Task) \
+                                                .join(Submission) \
+                                                .filter(Task.submissions,
+                                                        Submission.user_id == user_id) \
+                                                .distinct()
     verdict_map = {v.name: v.value for v in Verdict}
     verdict_map['AC'] = 'Correct'
+    
     return render_template(
         'user_progress.html',
         user=user,
@@ -59,18 +71,58 @@ def user_progress(user_id):
         verdict_map=verdict_map
     )
 
-@admin_bp.route('/groups')
+@admin_bp.route('/groups', methods=['GET', 'POST'])
 def groups():
+    if request.method == 'POST':
+        if request.form['action'] == 'delete_group':
+            group_id = request.form['group_id']
+            db.session.delete(Group.query.get(group_id))
+            
+        db.session.commit()
+        flash('Saved', 'success')
+        
     groups = Group.query.order_by(Group.name).all()
-    return render_template('admin.html', groups=groups)
+    return render_template('groups.html', groups=groups)
 
-@admin_bp.route('/<group_id>')
-def progress(group_id):
-    return 'ha'
+@admin_bp.route('/group/<group_id>', methods=['GET', 'POST'])
+def group_progress(group_id):
+    if request.method == 'POST':
+        if request.form['action'] == 'remove_user':
+            user_id = request.form['user_id']
+            user = User.query.get(user_id)
+            user.group_id = None
+        
+        db.session.commit()
+        flash('Saved', 'success')
+        
+    group = Group.query.get_or_404(group_id)
+    tasks = Task.query.all()
+    modules = Module.query.all()
+    correct_tasks = {}
+    tasks_with_submissions = {}
+    for user in group.users:
+        correct_tasks[user.id] = db.session.query(Task) \
+                                            .join(Submission) \
+                                            .filter(Submission.user_id == user.id,
+                                                    Submission.overall_verdict == Verdict.AC) \
+                                            .distinct()
+        tasks_with_submissions[user.id] = db.session.query(Task) \
+                                                    .join(Submission) \
+                                                    .filter(Task.submissions,
+                                                            Submission.user_id == user.id) \
+                                                    .distinct()
+    verdict_map = {v.name: v.value for v in Verdict}
+    verdict_map['AC'] = 'Correct'
 
-@admin_bp.route('/<group_id>/edit')
-def edit_group(group_id):
-    return 'he'
+    return render_template(
+        'group_progress.html',
+        group=group,
+        tasks=tasks,
+        modules=modules,
+        correct_tasks=correct_tasks,
+        tasks_with_submissions=tasks_with_submissions,
+        verdict_map=verdict_map
+    )
 
 @admin_bp.route('/tasks')
 def tasks():

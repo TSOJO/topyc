@@ -4,28 +4,46 @@
 {% block content %}
 <h3>Groups</h3>
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-md-6">
         <table class="table table-striped">
             <thead>
                 <tr class="d-flex">
-                    <th scope="col" class="col-6">Name</th>
-                    <th scope="col" class="col-3"></th>
-                    <th scope="col" class="col-3"></th>
+                    <th scope="col" class="col-4">Name</th>
+                    <th scope="col" class="col-4"></th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
                 {% for group in groups %}
                 <tr class="d-flex">
-                    <th scope="row" class="col-6 text-break">{{ group.name }}</th>
-                    <td class="col-3">
-                        <a href="{{ url_for('admin_bp.progress', group_id=group.id) }}" class="text-decoration-none">
-                            View progress
-                        </a>
+                    <th scope="row" class="col-4 text-break">{{ group.name }}</th>
+                    <td class="col-4 text-center">
+                        <a class="btn btn-primary" href="{{ url_for('admin_bp.group_progress', group_id=group.id) }}">View progress</a>
                     </td>
-                    <td class="col-3">
-                        <a href="{{ url_for('admin_bp.edit_group', group_id=group.id) }}" class="text-decoration-none">
-                            Edit students
-                        </a>
+                    <td class="col-4">
+                        <form method="post">
+                            <div class="modal fade" id="confirm{{ loop.index }}-modal" tabindex="-1" aria-labelledby="confirm{{ loop.index }}-modal-label" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="confirm{{ loop.index }}-modal-label">Confirm deletion</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            This can't be undone.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-danger">Delete group</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="action" value="delete_group" />
+                            <input type="hidden" name="group_id" value="{{ group.id }}" />
+                            <div class="text-center">
+                                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm{{ loop.index }}-modal">Delete group</a>
+                            </div>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}

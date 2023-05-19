@@ -71,6 +71,10 @@ def insert_debug_db(db):
         Module(
             number=1,
             name='Input'
+        ),
+        Module(
+            number=4,
+            name='aswesoemn'
         )
     ]
     
@@ -95,7 +99,203 @@ def insert_debug_db(db):
             name='somethingelse',
             description='something something',
             required_keywords=['asdf']
-        )
+        ),
+        Task(
+            module_id=2,
+            number=3,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=2,
+            number=4,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=2,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=3,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=4,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=5,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=6,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=7,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=8,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=9,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=10,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=1,
+            number=11,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=1,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=2,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=3,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=4,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=5,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=6,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=7,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=8,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=9,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=10,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=5,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=6,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=7,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=8,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=9,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
+        Task(
+            module_id=3,
+            number=10,
+            name='somethingelse',
+            description='something something',
+            required_keywords=['asdf']
+        ),
     ]
     
     testcases = [

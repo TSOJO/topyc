@@ -1,26 +1,48 @@
 {% extends "base.html" %}
-{% block title %}{{ user.name }}'s progress{% endblock title %}
+{% block title %}{{ group.name }}'s progress{% endblock title %}
 
 {% block content %}
 <h3>
-    {{ user.name }}
-    <small class="text-muted">{{ user.email }}</small>
+    {{ group.name }}
 </h3>
 <div class="table-responsive">
     <table class="table table-bordered">
         <thead>
-            {% for module in modules | sort(attribute='number') %}
-            {% for task in module.tasks | sort(attribute='number') %}
-            <th scope="col">
-                <a class="text-decoration-none" href="{{ url_for('task_bp.task', module_number=module.number, task_number=task.number) }}">
-                    {{ module.number }}.{{ task.number }}
-                </a>
-            </th>
-            {% endfor %}
-            {% endfor %}
+            <tr>
+                <th scope="col">
+                    Student
+                </th>
+                {% for module in modules | sort(attribute='number') %}
+                {% for task in module.tasks | sort(attribute='number') %}
+                <th scope="col">
+                    <a class="text-decoration-none" href="{{ url_for('task_bp.task', module_number=module.number, task_number=task.number) }}">
+                        {{ module.number }}.{{ task.number }}
+                    </a>
+                </th>
+                {% endfor %}
+                {% endfor %}
+            </tr>
         </thead>
         <tbody>
+            {% for user in group.users | sort(attribute="name") %}
             <tr>
+                <th scope="col">
+                    <div>
+                        {{ user.name }}
+                    </div>
+                    <div class="fw-normal">
+                        ({{ user.email }})
+                    </div>
+                    <div>
+                        <form method="post">
+                            <input type="hidden" name="action" value="remove_user" />
+                            <input type="hidden" name="user_id" value="{{ user.id }}" />
+                            <a onclick="this.closest('form').submit();return false;" href="#" class="text-decoration-none">
+                                Remove student from group
+                            </a>
+                        </form>
+                    </div>
+                </th>
                 {% for module in modules | sort(attribute='number') %}
                 {% set module_loop = loop %}
                 {% for task in module.tasks | sort(attribute='number') %}
@@ -84,14 +106,14 @@
                             </div>
                         </div>
                     </div>
-                    {% if task in correct_tasks %}
+                    {% if task in correct_tasks[user.id] %}
                     <!-- AC -->
                     <a data-bs-toggle="modal" data-bs-target="#task-detail{{ module_loop.index }}-{{ loop.index }}-modal" href="#">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#198754" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
                         </svg>
                     </a>
-                    {% elif task in tasks_with_submissions %}
+                    {% elif task in tasks_with_submissions[user.id] %}
                     <!-- WRONG/PROBLEM -->
                     <a data-bs-toggle="modal" data-bs-target="#task-detail{{ module_loop.index }}-{{ loop.index }}-modal" href="#">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#DF4957" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
@@ -108,6 +130,7 @@
                 {% endfor %}
                 {% endfor %}
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
