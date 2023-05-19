@@ -84,6 +84,57 @@ def groups():
     groups = Group.query.order_by(Group.name).all()
     return render_template('groups.html', groups=groups)
 
+def get_group_excel(group):
+    wb = Workbook()
+    ws = wb.active
+    
+    modules = Module.query.order_by(Module.number).all()
+    sorted_tasks = []
+    for module in modules:
+        for task in sorted(module.tasks, key=lambda t: t.number):
+            sorted_tasks.append(task)
+    
+    ws.append([''] + [f'{task.module.number}.{task.number}: {task.name}' for task in sorted_tasks])
+    
+    for user in sorted(group.users, key=lambda u: u.email):
+        correct_tasks = db.session.query(Task) \
+                                            .join(Submission) \
+                                            .filter(Submission.user_id == user.id,
+                                                    Submission.overall_verdict == Verdict.AC) \
+                                            .distinct()
+        tasks_with_submissions = db.session.query(Task) \
+                                            .join(Submission) \
+                                            .filter(Task.submissions,
+                                                    Submission.user_id == user.id) \
+                                            .distinct()
+        
+        user_row = [user.email]
+        for task in sorted_tasks:
+            if task in correct_tasks:
+                user_row.append('Correct')
+            elif task in tasks_with_submissions:
+                user_row.append('Attempted')
+            else:
+                user_row.append('Not attempted')
+        ws.append(user_row)
+    
+    return wb
+
+@admin_bp.route('/group/<group_id>/download')
+def download_group_excel(group_id):
+    group = Group.query.get_or_404(group_id)
+    
+    file_stream = BytesIO()
+    wb = get_group_excel(group)
+    wb.save(file_stream)
+    file_stream.seek(0)
+    
+    return send_file(
+        file_stream,
+        as_attachment=True,
+        download_name=f'{group.name}.xlsx'
+    )
+
 @admin_bp.route('/group/<group_id>', methods=['GET', 'POST'])
 def group_progress(group_id):
     if request.method == 'POST':

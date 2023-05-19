@@ -2,9 +2,12 @@
 {% block title %}{{ group.name }}'s progress{% endblock title %}
 
 {% block content %}
-<h3>
-    {{ group.name }}
-</h3>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h3 class="my-0">
+        {{ group.name }}
+    </h3>
+    <a href="{{ url_for('admin_bp.download_group_excel', group_id=group.id) }}" class="btn btn-primary">Download .xlsx</a>
+</div>
 <div class="table-responsive">
     <table class="table table-bordered">
         <thead>
