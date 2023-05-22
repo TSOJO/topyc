@@ -76,12 +76,7 @@ def register():
         send_email(
             to_email=email,
             subject='Your ToPyC password',
-            body=f'''
-            Hi {name},\n
-            Your password is: {password}\n
-            Best regards,\n
-            ToPyC
-            '''
+            body=f'Hi {name},\nYour password is: {password}\nBest regards,\nToPyC'
         )
         
         flash('Registered successfully - your password has been sent to your email', 'success')

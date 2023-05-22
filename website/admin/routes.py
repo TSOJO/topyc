@@ -35,6 +35,12 @@ def users():
         elif request.form['action'] == 'delete_user':
             user_id = request.form['user_id']
             db.session.delete(User.query.get(user_id))
+        
+        elif request.form['action'] == 'update_admin':
+            user_id = request.form['user_id']
+            
+            user = User.query.get(user_id)
+            user.is_admin = 'admin_check' in request.form
             
         db.session.commit()
         flash('Saved', 'success')

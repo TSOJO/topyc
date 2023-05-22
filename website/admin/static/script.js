@@ -5,6 +5,13 @@ try {
 }
 catch (e) {}
 
+try {
+    $('.admin-check').change((e) => {
+        e.target.form.submit()
+    })
+}
+catch (e) {}
+
 window.onpageshow = () => {
     // Initialise tooltips.
     $('[data-bs-toggle="tooltip"]').tooltip()

@@ -18,18 +18,19 @@
 <table class="table table-striped">
     <thead>
         <tr class="d-flex">
-            <th scope="col" class="col-3">Email</th>
-            <th scope="col" class="col-3">Name</th>
+            <th scope="col" class="col-3">Email<br />(@tonbridge-school.org)</th>
+            <th scope="col" class="col-2">Name</th>
             <th scope="col" class="col-2">Group</th>
             <th scope="col" class="col-2"></th>
             <th scope="col" class="col-2"></th>
+            <th scope="col" class="col-1">Admin?</th>
         </tr>
     </thead>
     <tbody class="table-group-divider">
         {% for user in users_page %}
         <tr class="d-flex">
-            <th scope="row" class="col-3 text-break">{{ user.email }}</th>
-            <td class="col-3 text-break">{{ user.name }}</td>
+            <th scope="row" class="col-3 text-break">{{ user.email.split('@')[0] }}</th>
+            <td class="col-2 text-break">{{ user.name }}</td>
             <td class="col-2">
                 <form method="post">
                     <input type="hidden" name="action" value="change_group" />
@@ -69,6 +70,13 @@
                     <div class="text-center">
                         <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm{{ loop.index }}-modal">Delete user</a>
                     </div>
+                </form>
+            </td>
+            <td class="col-1">
+                <form method="post">
+                    <input type="hidden" name="action" value="update_admin" />
+                    <input type="hidden" name="user_id" value="{{ user.id }}" />
+                    <input class="form-check-input admin-check" type="checkbox" name="admin_check" value="" {% if user.is_admin %} checked {% endif %} {% if user == current_user %} disabled {% endif %} />
                 </form>
             </td>
         </tr>
