@@ -26,7 +26,6 @@ class Module(db.Model):
 
 class Testcase(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
-    number = db.Column(db.INTEGER, nullable=False)
     task_id = db.Column(db.ForeignKey('task.id'), nullable=False)
     input = db.Column(db.TEXT)
     answer_keywords = db.Column(db.ARRAY(db.TEXT))

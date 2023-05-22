@@ -61,8 +61,8 @@
                             {% endif %}
                                     <a href="{{ url_for('task_bp.task', module_number=module.number, task_number=task.number) }}" class="list-group-item list-group-item-action">
                                         <div class="row">
-                                            <span class="fw-bold col-1">{{ module.number }}.{{ task.number }}</span> 
-                                            <span class="col-9">{{ task.name }}</span>
+                                            <span class="fw-bold col-2">{{ module.number }}.{{ task.number }}</span> 
+                                            <span class="col">{{ task.name }}</span>
                                             {% if task in user_done_tasks %}
                                             <span class="badge bg-success rounded-pill ms-auto me-2 col-auto">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">

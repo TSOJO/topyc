@@ -301,19 +301,16 @@ def insert_debug_db(db):
     testcases = [
         Testcase(
             task_id=1,
-            number=1,
             input='15',
             answer_keywords=['child']
         ),
         Testcase(
             task_id=1,
-            number=2,
             input='20',
             answer_keywords=['adult']
         ),
         Testcase(
             task_id=1,
-            number=3,
             input='100',
             answer_keywords=['old']
         ),

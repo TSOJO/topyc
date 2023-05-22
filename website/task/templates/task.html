@@ -52,7 +52,7 @@
                             <th scope="row" class="col-4">{{ submission.time_submitted.strftime('%d/%m/%Y %H:%M') }}</th>
                             <td class="col-6 d-flex flex-wrap justify-content-start align-items-center" style="gap:5px;">
                                 {% set submission_loop = loop %}
-                                {% for testcase_result in submission.testcase_results | sort(attribute='testcase.number') %}
+                                {% for testcase_result in submission.testcase_results | sort(attribute='testcase.id') %}
                                 {% if testcase_result.verdict | string == 'AC' %}
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#198754" class="bi bi-check-circle-fill" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-title="Correct!">

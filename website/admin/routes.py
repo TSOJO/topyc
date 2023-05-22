@@ -3,7 +3,7 @@ from flask_login import current_user
 from io import BytesIO
 from openpyxl import Workbook
 
-from website.model import db, User, Group, Task, Module, Submission
+from website.model import db, User, Group, Task, Module, Submission, Testcase
 from isolate_wrapper import Verdict
 
 admin_bp = Blueprint(
@@ -225,8 +225,30 @@ def new_task():
     flash('Saved', 'success')
     return redirect(url_for('admin_bp.edit_task', task_id=task.id))
 
-@admin_bp.route('/<task_id>/edit')
+@admin_bp.route('/<task_id>/edit', methods=['GET', 'POST'])
 def edit_task(task_id):
     task = Task.query.get_or_404(task_id)
+    
+    if request.method == 'POST':
+        task.module_id = request.form['module_id']
+        task.number = request.form['number']
+        task.name = request.form['name']
+        task.description = request.form['description']
+        raw_required_keywords = request.form['required_keywords'].split('\n')
+        task.required_keywords = [x.strip() for x in raw_required_keywords]
+        
+        task.testcases = []
+        for k, v in request.form.items():
+            if k.startswith('input'):
+                raw_answer_keywords = request.form[k.replace('input', 'answer')].strip().split('\n')
+                answer_keywords = [x.strip() for x in raw_answer_keywords]
+                task.testcases.append(Testcase(
+                    input=v,
+                    answer_keywords=answer_keywords
+                ))
+        
+        db.session.commit()
+        flash('Saved', 'success')
+        
     modules = Module.query.all()
     return render_template('edit_task.html', task=task, modules=modules)

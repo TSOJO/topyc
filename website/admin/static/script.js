@@ -12,6 +12,59 @@ try {
 }
 catch (e) {}
 
+function removeTestcase(number) {
+    let numTestcases = $('#testcases').children('.testcase').length
+    $('#testcase' + number).remove()
+    for (let i = number; i <= numTestcases; i++) {
+        console.log(i)
+        $('#testcase' + i).attr('id', 'testcase' + (i-1))
+        $('#testcase-number' + i).html('#' + (i-1))
+        $('#testcase-number' + i).attr('id', 'testcase-number' + (i-1))
+        $('#remove-testcase' + i).attr('onclick', 'removeTestcase(' + (i-1) + ')')
+        $('#remove-testcase' + i).attr('id', 'remove-testcase' + (i-1))
+        $('#input-label' + i).attr('for', 'input' + (i-1))
+        $('#input-label' + i).attr('id', 'input-label' + (i-1))
+        $('#input' + i).attr('name', 'input' + (i-1))
+        $('#input' + i).attr('id', 'input' + (i-1))
+        $('#answer-label' + i).attr('for', 'answer' + (i-1))
+        $('#answer-label' + i).attr('id', 'answer-label' + (i-1))
+        $('#answer' + i).attr('name', 'answer' + (i-1))
+        $('#answer' + i).attr('id', 'answer' + (i-1))
+    }
+}
+
+try {
+    $('#new-testcase').click(() => {
+        let testcasesBox = $('#testcases')
+        let number = testcasesBox.children('.testcase').length + 1
+        let html = [
+            '<div class="testcase" id="testcase' + number + '">',
+                '<div class="d-flex justify-content-between align-items-center">',
+                    '<label class="form-label my-0" id="testcase-number' + number + '">#' + number + '</label>',
+                    '<a class="btn btn-danger remove-testcase" id="remove-testcase' + number + '" onclick="removeTestcase(' + number + ')">Remove testcase</a>',
+                '</div>',
+                '<div class="row">',
+                    '<div class="col-6">',
+                        '<label for="input' + number + '" class="form-label" id="input-label' + number + '">Input</label>',
+                        '<textarea id="input' + number + '" class="form-control consolas" name="input' + number + '" rows="5"></textarea>',
+                    '</div>',
+                    '<div class="col-6">',
+                        '<label for="answer' + number + '" class="form-label" id="answer-label' + number + '">Answer keywords</label>',
+                        '<textarea id="answer' + number + '" class="form-control consolas" name="answer' + number + '" rows="5"></textarea>',
+                        '<div class="form-text">These are the keywords that must appear in the student\'s program output for it to be marked as correct. Put each answer keyword on its own line. Case-insensitive.</div>',
+                    '</div>',
+                '</div>',
+                '<hr />',
+            '</div>',
+        ].join('\n')
+        testcasesBox.append(html)
+        $('.remove-testcase').click((e) => {
+            removeTestcase(e)
+        })
+    })
+}
+catch (e) {}
+
 window.onpageshow = () => {
     // Initialise tooltips.
     $('[data-bs-toggle="tooltip"]').tooltip()

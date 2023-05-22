@@ -8,7 +8,7 @@
         <div class="row mb-3 g-3">
             <div class="col-md-6">
                 <label for="module" class="form-label">Module</label>
-                <select id="module" name="module" class="form-select" required>
+                <select id="module" name="module_id" class="form-select" required>
                     {% for module in modules | sort(attribute='number') %}
                     <option value="{{ module.id }}" {% if module == task.module %} selected {% endif %}>{{ module.number }}. {{ module.name }}</option>
                     {% endfor %}
@@ -16,23 +16,52 @@
             </div>
             <div class="col-md-6">
                 <label for="number" class="form-label">Number</label>
-                <input type="number" class="form-control" name="number" value="{{ task.number }}" required />
+                <input id="number" type="number" class="form-control" name="number" value="{{ task.number }}" required />
             </div>
         </div>
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" name="name" value="{% if task.name %}{{ task.name }}{% endif %}" />
+            <input id="name" type="text" class="form-control" name="name" value="{% if task.name %}{{ task.name }}{% endif %}" />
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" name="description" rows="5">{% if task.description %}{{ task.description }}{% endif %}</textarea>
+            <textarea id="description" class="form-control" name="description" rows="5">{% if task.description %}{{ task.description }}{% endif %}</textarea>
         </div>
         <div class="mb-3">
-            <label for="description" class="form-label">Required keywords</label>
-            <textarea class="form-control consolas" name="description" rows="5">{% if task.required_keywords %}{{ task.required_keywords | join('\n') }}{% endif %}</textarea>
+            <label for="required-keywords" class="form-label">Required keywords</label>
+            <textarea id="required-keywords" class="form-control consolas" name="required_keywords" rows="5">{% if task.required_keywords %}{{ task.required_keywords | join('\n') }}{% endif %}</textarea>
             <div class="form-text">These are the keywords that the students must use in their program. Put each required keyword on its own line.</div>
         </div>
-        <!-- TODO: testcases-->
+        <div class="mb-3">
+            <label class="form-label">Testcases</label>
+            <div class="border p-3">
+                <div id="testcases">
+                    {% for testcase in task.testcases | sort(attribute='id') %}
+                    <div class="testcase" id="testcase{{ loop.index }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label my-0" id="testcase-number{{ loop.index }}">#{{ loop.index }}</label>
+                            <a class="btn btn-danger remove-testcase" id="remove-testcase{{ loop.index }}" onclick="removeTestcase({{ loop.index }})">Remove testcase</a>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="input{{ loop.index }}" class="form-label" id="input-label{{ loop.index }}">Input</label>
+                                <textarea id="input{{ loop.index }}" class="form-control consolas" name="input{{ loop.index }}" rows="5">{{ testcase.input }}</textarea>
+                            </div>
+                            <div class="col-6">
+                                <label for="answer{{ loop.index }}" class="form-label" id="answer-label{{ loop.index }}">Answer keywords</label>
+                                <textarea id="answer{{ loop.index }}" class="form-control consolas" name="answer{{ loop.index }}" rows="5">{{ testcase.answer_keywords | join('\n') }}</textarea>
+                                <div class="form-text">These are the keywords that must appear in the student's program output for it to be marked as correct. Put each answer keyword on its own line. Case-insensitive.</div>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                    {% endfor %}
+                </div>
+                <a class="btn btn-success" id="new-testcase">New testcase</a>
+                <div class="form-text text-danger">Note that the grader will consider the user's input prompt as part of its output. Try to steer the student away from using any answer keywords in their prompt. For example, if the one of the answer keywords is 'old', try to get the student to prompt for 'What is your age?' rather than 'How old are you?', as the latter would result in a falsely correct verdict.</div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
 {% endblock content %}

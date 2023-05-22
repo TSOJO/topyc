@@ -68,9 +68,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for testcase_result in submission.testcase_results | sort(attribute='testcase.number') %}
+            {% for testcase_result in submission.testcase_results | sort(attribute='testcase.id') %}
             <tr>
-                <th scope="row">{{ testcase_result.testcase.number }}</th>
+                <th scope="row">{{ loop.index }}</th>
                 <td>
                     {% if testcase_result.verdict | string == 'AC' %}
                     <span>
