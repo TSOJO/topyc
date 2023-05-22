@@ -8,7 +8,7 @@ import ssl
 import smtplib
 
 from website.model import db, User, Group
-from config import GMAIL_EMAIL, GMAIL_APP_PASSWORD
+from config import GMAIL_EMAIL, GMAIL_APP_PASSWORD, INITIAL_ADMIN_EMAIL
 
 user_bp = Blueprint(
     'user_bp', __name__, template_folder='templates', static_folder='static', static_url_path='/user/static'
@@ -66,6 +66,9 @@ def register():
             name=name,
             is_admin=False
         )
+        
+        if email == INITIAL_ADMIN_EMAIL:
+            user.is_admin = True
         
         db.session.add(user)
         db.session.commit()
