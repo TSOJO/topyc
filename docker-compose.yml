@@ -17,7 +17,7 @@ services:
 
   website:
     build: .
-    command: gunicorn -b 0.0.0.0:8000 -w 1 --threads 2 'website:init_app()'
+    command: gunicorn -b 0.0.0.0:8000 -w 4 --threads 2 'website:init_app()'
     restart: always
     privileged: true
     expose:

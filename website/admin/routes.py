@@ -90,6 +90,17 @@ def groups():
     groups = Group.query.order_by(Group.name).all()
     return render_template('groups.html', groups=groups)
 
+@admin_bp.route('/new-group', methods=['POST'])
+def new_group():
+    group_name = request.form['group_name']
+    group = Group(
+        name=group_name
+    )
+    db.session.add(group)
+    db.session.commit()
+    flash('Saved', 'success')
+    return redirect(url_for('admin_bp.groups'))
+
 def get_group_excel(group):
     wb = Workbook()
     ws = wb.active

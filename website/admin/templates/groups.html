@@ -3,6 +3,31 @@
 
 {% block content %}
 <h3>Groups</h3>
+<div class="modal fade" id="new-group-modal" tabindex="-1" aria-labelledby="new-group-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="new-group-modal-label">New Group</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{{ url_for('admin_bp.new_group') }}" class="needs-validation" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="group-name" class="form-label">Group name</label>
+                        <input type="text" class="form-control" name="group_name" id="group-name" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-group-modal">
+    New Group
+</a>
 <div class="row">
     <div class="col-md-6">
         <table class="table table-striped">
@@ -13,7 +38,7 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
-                {% for group in groups %}
+                {% for group in groups | sort(attribute='name') %}
                 <tr class="d-flex">
                     <th scope="row" class="col-4 text-break">{{ group.name }}</th>
                     <td class="col-4 text-center">

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}403{% endblock title %}
+
+{% block content %}
+<h1>403</h1>
+<p>{{ description }}</p>
+<a href="{{ url_for('home_bp.home') }}" class="text-decoration-none">Home</a>
+{% endblock content %}

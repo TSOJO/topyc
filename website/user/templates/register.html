@@ -4,7 +4,7 @@
 {% block content %}
 <div class="row">
     <div class="border rounded-2 col-md-6 p-4 mx-auto">
-        <form method="post" class="needs-validation" novalidate>
+        <form method="post" class="needs-validation" id="register-form" novalidate>
             <h2 class="mb-3">Register</h2>
             <div class="form-floating mb-3">
                 <input class="form-control" id="name" type="text" name="name" placeholder="John Doe" required />
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary" type="submit">Register</button>
+                <button class="btn btn-primary" type="submit" id="register-button">Register</button>
                 <a class="text-decoration-none" href="{{ url_for('user_bp.login') }}">Login here</a>
             </div>
         </form>

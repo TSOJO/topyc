@@ -21,6 +21,11 @@ def init_app():
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(admin_bp, url_prefix='/admin')
     
+    from website.errors import page_not_found, unauthorised
+    
+    app.register_error_handler(403, unauthorised)
+    app.register_error_handler(404, page_not_found)
+    
     from website.model import db, User
     db.init_app(app)
     
@@ -45,8 +50,8 @@ def init_app():
         ):
             return login_manager.unauthorized()
     
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
         
         # if app.config['DEV']:
         #     insert_debug_db(db)
