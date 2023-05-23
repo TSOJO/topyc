@@ -23,9 +23,17 @@
             <label for="name" class="form-label">Name</label>
             <input id="name" type="text" class="form-control" name="name" value="{% if task.name %}{{ task.name }}{% endif %}" />
         </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea id="description" class="form-control" name="description" rows="5">{% if task.description %}{{ task.description }}{% endif %}</textarea>
+        <div class="mb-3 row g-3">
+            <div class="col-lg-6">
+                <label for="description" class="form-label">Description (supports <a class="text-decoration-none" href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>)</a></label>
+                <textarea id="description" class="form-control" name="description" rows="5">{% if task.description %}{{ task.description }}{% endif %}</textarea>
+            </div>
+            <div class="col-lg-6">
+                <label for="description-md" class="form-label">Description preview</label>
+                <div class="border p-2">
+                    <md-block id="description-md"></md-block>
+                </div>
+            </div>
         </div>
         <div class="mb-3">
             <label for="required-keywords" class="form-label">Required keywords</label>

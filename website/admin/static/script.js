@@ -12,6 +12,13 @@ try {
 }
 catch (e) {}
 
+try {
+    $('#description').on('input', () => {
+        $('#description-md')[0].mdContent = $('#description').val()
+    })
+}
+catch (e) {}
+
 function removeTestcase(number) {
     let numTestcases = $('#testcases').children('.testcase').length
     $('#testcase' + number).remove()
@@ -81,6 +88,11 @@ window.onpageshow = () => {
         editor.session.setUseWrapMode(true)
         editor.setOptions({ readOnly: true, highlightActiveLine: false, highlightGutterLine: false, maxLines: Infinity })
         editor.renderer.$cursorLayer.element.style.display = "none"
+    }
+    catch (e) {}
+
+    try {
+        $('#description-md')[0].mdContent = $('#description').val()
     }
     catch (e) {}
 }
