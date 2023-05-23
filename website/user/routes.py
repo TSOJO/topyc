@@ -48,7 +48,7 @@ def send_email(to_email, subject, body):
 def register():
     if request.method == 'POST':
         name = request.form['name']
-        email = request.form['email']
+        email = request.form['email'].lower()
         
         if not check_tonbridge_email(email):
             flash('Please use your school email (@tonbridge-school.org)', 'error')
@@ -87,7 +87,7 @@ def register():
 @user_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        email = request.form['email'].lower()
         password = request.form['password']
         
         user = User.query.filter_by(email=email).first()
