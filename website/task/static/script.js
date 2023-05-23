@@ -53,10 +53,7 @@ function getLongVerdict(verdict) {
 
 function checkKeywordPresent(text, keyword) {
     text = text.replaceAll('\n', ' ')
-    if (text.includes(' ' + keyword)) {
-        return true;
-    }
-    if (text.startsWith(keyword)) {
+    if (text.includes(keyword)) {
         return true;
     }
     return false;

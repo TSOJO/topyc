@@ -11,9 +11,7 @@ api_bp = Blueprint('api_bp', __name__)
 
 def check_keyword_present(text, keyword):
     text = text.replace('\n', ' ')
-    if ' ' + keyword in text:
-        return True
-    if text.startswith(keyword):
+    if keyword in text:
         return True
     return False
 
