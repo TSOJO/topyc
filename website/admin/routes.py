@@ -221,6 +221,17 @@ def edit_module():
     flash('Saved', 'success')
     return redirect(url_for('home_bp.home'))
 
+@admin_bp.route('/delete-module', methods=['POST'])
+def delete_module():
+    module_id = request.form['module_id']
+    module = Module.query.get_or_404(module_id)
+    
+    db.session.delete(module)
+    db.session.commit()
+    
+    flash('Saved', 'success')
+    return redirect(url_for('home_bp.home'))
+
 @admin_bp.route('/new-task', methods=['POST'])
 def new_task():
     module_id = request.form['module_id']
@@ -263,3 +274,14 @@ def edit_task(task_id):
         
     modules = Module.query.all()
     return render_template('edit_task.html', task=task, modules=modules)
+
+@admin_bp.route('/delete-task', methods=['POST'])
+def delete_task():
+    task_id = request.form['task_id']
+    task = Task.query.get_or_404(task_id)
+    
+    db.session.delete(task)
+    db.session.commit()
+    
+    flash('Saved', 'success')
+    return redirect(url_for('home_bp.home'))

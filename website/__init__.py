@@ -53,8 +53,8 @@ def init_app():
     # with app.app_context():
     #     db.create_all()
         
-        # if app.config['DEV']:
-        #     insert_debug_db(db)
+    #     if app.config['DEV']:
+    #         insert_debug_db(db)
             # from website.model import Task, Module, Testcase
             
             # t = Task.query.get(1)

@@ -2,7 +2,36 @@
 {% block title %}Editing {{ task.module.number}}.{{ task.number }}: {{ task.name }}{% endblock title %}
 
 {% block content %}
-<h3>{{ task.module.number}}.{{ task.number }}: {{ task.name }}</h3>
+<div class="d-flex justify-content-between mb-2">
+    <div>
+        <h3>{{ task.module.number}}.{{ task.number }}: {{ task.name }}</h3>
+    </div>
+    <div>
+        <div class="modal fade" id="delete-task-modal" tabindex="-1" aria-labelledby="delete-task-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="delete-task-modal-label">Delete Task</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" action="{{ url_for('admin_bp.delete_task') }}" class="needs-validation" novalidate>
+                        <input type="hidden" name="task_id" value="{{ task.id }}" />
+                        <div class="modal-body">
+                            Are you sure you want to delete this task?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#delete-task-modal">
+            Delete task
+        </a>
+    </div>
+</div>
 <div class="border p-4">
     <form method="post" class="needs-validation" novalidate>
         <div class="row mb-3 g-3">

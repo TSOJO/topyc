@@ -26,7 +26,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="edit-module{{ module.id }}-modal-label">New Module</h1>
+                                        <h1 class="modal-title fs-5" id="edit-module{{ module.id }}-modal-label">Edit Module</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <form method="post" action="{{ url_for('admin_bp.edit_module') }}" class="needs-validation" novalidate>
@@ -51,6 +51,30 @@
                         </div>
                         <a class="text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#edit-module{{ module.id }}-modal">
                             Edit module
+                        </a>
+                        |
+                        <div class="modal fade" id="delete-module{{ module.id }}-modal" tabindex="-1" aria-labelledby="delete-module{{ module.id }}-modal-label" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="delete-module{{ module.id }}-modal-label">Delete Module</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="post" action="{{ url_for('admin_bp.delete_module') }}" class="needs-validation" novalidate>
+                                        <input type="hidden" name="module_id" value="{{ module.id }}" />
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this module: {{ module.number }}. {{ module.name }}? This will delete all its tasks.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#delete-module{{ module.id }}-modal">
+                            Delete module
                         </a>
                         {% endif %}
                         <ul class="list-group">

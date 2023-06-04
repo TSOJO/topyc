@@ -15,14 +15,14 @@ class Task(db.Model):
     
     module = db.relationship('Module', back_populates='tasks')
     testcases = db.relationship('Testcase', back_populates='task', cascade='all, delete-orphan')
-    submissions = db.relationship('Submission', back_populates='task')
+    submissions = db.relationship('Submission', back_populates='task', cascade='all, delete-orphan')
 
 class Module(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     number = db.Column(db.INTEGER, nullable=False)
     name = db.Column(db.TEXT)
     
-    tasks = db.relationship('Task', back_populates='module', cascade='all, delete')
+    tasks = db.relationship('Task', back_populates='module', cascade='all, delete-orphan')
 
 class Testcase(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
@@ -31,7 +31,7 @@ class Testcase(db.Model):
     answer_keywords = db.Column(db.ARRAY(db.TEXT))
     
     task = db.relationship('Task', back_populates='testcases')
-    testcase_results = db.relationship('TestcaseResult', back_populates='testcase')
+    testcase_results = db.relationship('TestcaseResult', back_populates='testcase', cascade='all, delete-orphan')
 
 class User(db.Model, UserMixin):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
@@ -42,7 +42,7 @@ class User(db.Model, UserMixin):
     group_id = db.Column(db.ForeignKey('group.id'))
     
     group = db.relationship('Group', back_populates='users')
-    submissions = db.relationship('Submission', back_populates='user')
+    submissions = db.relationship('Submission', back_populates='user', cascade='all, delete-orphan')
 
 class Group(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
@@ -52,15 +52,15 @@ class Group(db.Model):
 
 class Submission(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.ForeignKey('user.id'))
-    task_id = db.Column(db.ForeignKey('task.id'))
+    user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
+    task_id = db.Column(db.ForeignKey('task.id'), nullable=False)
     time_submitted = db.Column(db.TIMESTAMP)
     overall_verdict = db.Column(db.Enum(Verdict))
     source_code = db.Column(db.TEXT)
     
     user = db.relationship('User', back_populates='submissions')
     task = db.relationship('Task', back_populates='submissions')
-    testcase_results = db.relationship('TestcaseResult', back_populates='submission')
+    testcase_results = db.relationship('TestcaseResult', back_populates='submission', cascade='all, delete-orphan')
 
 class TestcaseResult(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
