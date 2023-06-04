@@ -11,6 +11,14 @@
             if (!form.checkValidity()) {
                 event.preventDefault()
                 event.stopPropagation()
+                try {
+                    // for register.html
+                    $('#register-button').prop('disabled', false)
+                    $('#register-button').html(
+                        'Register'
+                    )
+                }
+                catch {}
             }
     
             form.classList.add('was-validated')
