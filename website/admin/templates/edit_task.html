@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Editing {{ task.module.number}}.{{ task.number }}: {{ task.name }}{% endblock title %}
+{% block title %}Editing {{ task.module.number}}.{{ task.number }}: {{ task.name if task.name }}{% endblock title %}
 
 {% block content %}
 <div class="d-flex justify-content-between mb-2">
     <div>
-        <h3>{{ task.module.number}}.{{ task.number }}: {{ task.name }}</h3>
+        <h3>{{ task.module.number }}.{{ task.number }}: {{ task.name if task.name }}</h3>
     </div>
     <div>
         <div class="modal fade" id="delete-task-modal" tabindex="-1" aria-labelledby="delete-task-modal-label" aria-hidden="true">
@@ -50,12 +50,12 @@
         </div>
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input id="name" type="text" class="form-control" name="name" value="{% if task.name %}{{ task.name }}{% endif %}" />
+            <input id="name" type="text" class="form-control" name="name" value="{{ task.name if task.name }}" />
         </div>
         <div class="mb-3 row g-3">
             <div class="col-lg-6">
                 <label for="description" class="form-label">Description (supports <a class="text-decoration-none" href="https://www.markdownguide.org/cheat-sheet/">Markdown</a> and HTML)</label>
-                <textarea id="description" class="form-control" name="description" rows="5">{% if task.description %}{{ task.description }}{% endif %}</textarea>
+                <textarea id="description" class="form-control" name="description" rows="5">{{ task.description if task.description }}</textarea>
             </div>
             <div class="col-lg-6">
                 <label for="description-md" class="form-label">Description preview</label>
@@ -66,7 +66,7 @@
         </div>
         <div class="mb-3">
             <label for="required-keywords" class="form-label">Required keywords</label>
-            <textarea id="required-keywords" class="form-control consolas" name="required_keywords" rows="5">{% if task.required_keywords %}{{ task.required_keywords | join('\n') }}{% endif %}</textarea>
+            <textarea id="required-keywords" class="form-control consolas" name="required_keywords" rows="5">{{ task.required_keywords | join('\n') if task.required_keywords }}</textarea>
             <div class="form-text">These are the keywords that the students must use in their program. Put each required keyword on its own line.</div>
         </div>
         <div class="mb-3">
