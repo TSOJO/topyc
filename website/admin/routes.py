@@ -3,7 +3,7 @@ from flask_login import current_user
 from io import BytesIO
 from openpyxl import Workbook
 
-from website.model import db, User, Group, Task, Module, Submission, Testcase
+from website.model import db, User, Group, Task, Module, Submission, Testcase, Lesson
 from isolate_wrapper import Verdict
 
 admin_bp = Blueprint(
@@ -247,7 +247,7 @@ def new_task():
     flash('Saved', 'success')
     return redirect(url_for('admin_bp.edit_task', task_id=task.id))
 
-@admin_bp.route('/<task_id>/edit', methods=['GET', 'POST'])
+@admin_bp.route('/task/<task_id>/edit', methods=['GET', 'POST'])
 def edit_task(task_id):
     task = Task.query.get_or_404(task_id)
     
@@ -284,4 +284,41 @@ def delete_task():
     db.session.commit()
     
     flash('Saved', 'success')
+    return redirect(url_for('home_bp.home'))
+
+@admin_bp.route('/new-lesson', methods=['POST'])
+def new_lesson():
+    module_id = request.form['module_id']
+    module = Module.query.get_or_404(module_id)
+    
+    lesson = Lesson(module_id=module_id)
+    
+    db.session.add(lesson)
+    db.session.commit()
+    flash('Lesson created', 'success')
+    
+    return redirect(url_for('admin_bp.edit_lesson', lesson_id=lesson.id))
+
+@admin_bp.route('/lesson/<lesson_id>/edit', methods=['GET', 'POST'])
+def edit_lesson(lesson_id):
+    lesson = Lesson.query.get_or_404(lesson_id)
+    
+    if request.method == 'POST':
+        text = request.form['text']
+        
+        lesson.text = text
+        db.session.commit()
+        flash('Lesson saved', 'success')
+    
+    return render_template('edit_lesson.html', lesson=lesson)
+
+@admin_bp.route('/delete-lesson', methods=['POST'])
+def delete_lesson():
+    lesson_id = request.form['lesson_id']
+    lesson = Lesson.query.get_or_404(lesson_id)
+    
+    db.session.delete(lesson)
+    db.session.commit()
+    
+    flash('Lesson deleted', 'success')
     return redirect(url_for('home_bp.home'))

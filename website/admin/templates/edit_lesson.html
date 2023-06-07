@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Editing Lesson: {{ lesson.module.number}}. {{ lesson.module.name }}{% endblock title %}
+
+{% block content %}
+<div class="d-flex justify-content-between mb-2">
+    <div>
+        <h3>Lesson: {{ lesson.module.number}}. {{ lesson.module.name }}</h3>
+    </div>
+    <div>
+        <div class="modal fade" id="delete-lesson-modal" tabindex="-1" aria-labelledby="delete-lesson-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="delete-lesson-modal-label">Delete Lesson</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" action="{{ url_for('admin_bp.delete_lesson') }}" class="needs-validation" novalidate>
+                        <input type="hidden" name="lesson_id" value="{{ lesson.id }}" />
+                        <div class="modal-body">
+                            Are you sure you want to delete this lesson?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#delete-lesson-modal">
+            Delete lesson
+        </a>
+    </div>
+</div>
+<form method="post">
+    <div class="row mb-3">
+        <div class="col-lg-6">
+            <label for="description" class="form-label">Lesson (supports <a class="text-decoration-none" href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>)</a></label>
+            <textarea id="description" class="form-control" name="text" rows="5">{% if lesson.text %}{{ lesson.text }}{% endif %}</textarea>
+        </div>
+        <div class="col-lg-6">
+            <label for="description-md" class="form-label">Preview</label>
+            <div class="border p-2">
+                <md-block id="description-md"></md-block>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+{% endblock content %}

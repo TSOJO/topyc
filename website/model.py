@@ -17,12 +17,20 @@ class Task(db.Model):
     testcases = db.relationship('Testcase', back_populates='task', cascade='all, delete-orphan')
     submissions = db.relationship('Submission', back_populates='task', cascade='all, delete-orphan')
 
+class Lesson(db.Model):
+    id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
+    module_id = db.Column(db.ForeignKey('module.id'), nullable=False, unique=True)
+    text = db.Column(db.TEXT)
+    
+    module = db.relationship('Module', back_populates='lesson')
+
 class Module(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     number = db.Column(db.INTEGER, nullable=False)
     name = db.Column(db.TEXT)
     
     tasks = db.relationship('Task', back_populates='module', cascade='all, delete-orphan')
+    lesson = db.relationship('Lesson', uselist=False, back_populates='module', cascade='all, delete-orphan')
 
 class Testcase(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)

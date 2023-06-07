@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.module.number }}. {{ lesson.module.name }}{% endblock title %}
+
+{% block content %}
+<h3>{{ lesson.module.number }}. {{ lesson.module.name }}</h3>
+<md-block id="md">{{ lesson.text | safe }}</md-block>
+{% endblock content %}
