@@ -59,6 +59,23 @@ function checkKeywordPresent(text, keyword) {
     return false;
 }
 
+function checkAllKeywordsPresent() {
+    if ($('#keywords').length) {  // exists
+        let res = true
+        $('#keywords').children().each((_, child) => {
+            let keyword = $(child).data('keyword')
+            if (checkKeywordPresent($('#user-code').val(), keyword)) {
+                $(child).addClass('list-group-item-success')
+            } else {
+                $(child).removeClass('list-group-item-success')
+                res = false
+            }
+        })
+        return res
+    }
+    return true
+}
+
 function resetSubmitButton() {
     $('#submit-button').prop('disabled', false)
     $('#submit-button').html([
@@ -97,22 +114,12 @@ window.onpageshow = () => {
         editor.on('change', () => {
             // Update the hidden textarea with the value in the front-end editor.
             textarea.val(editor.getValue())
-    
-            canSubmit = true
-            $('#keywords').children().each((_, child) => {
-                let keyword = $(child).data('keyword')
-                if (checkKeywordPresent(textarea.val(), keyword)) {
-                    $(child).addClass('list-group-item-success')
-                } else {
-                    $(child).removeClass('list-group-item-success')
-                    canSubmit = false
-                }
-            })
         })
     
         resetSubmitButton()
     
         $('#submit-button').click(function() {
+            canSubmit = checkAllKeywordsPresent()
             if (canSubmit) {
                 textarea.val(editor.getValue())
                 // Disable submit button.

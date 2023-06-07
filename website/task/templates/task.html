@@ -7,7 +7,7 @@
         <div class="col-lg">
             <h3><small class="text-muted">{{ task.module.number }}.{{ task.number }}</small> {{ task.name if task.name }}</h3>
             <md-block>{{ task.description | safe if task.description }}</md-block>
-            {% if task.required_keywords %}
+            {% if task.required_keywords != [''] %}
             <p>You must use these keywords in your program:</p>
             <div class="mb-3">
                 <ul class="list-group" id="keywords">
