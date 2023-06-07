@@ -53,7 +53,8 @@ function getLongVerdict(verdict) {
 
 function checkKeywordPresent(text, keyword) {
     text = text.replaceAll('\n', ' ')
-    if (text.includes(keyword)) {
+    keywordNoSpaces = keyword.replaceAll(' ', '')
+    if (text.includes(keyword) || text.includes(keywordNoSpaces)) {
         return true;
     }
     return false;
@@ -114,6 +115,7 @@ window.onpageshow = () => {
         editor.on('change', () => {
             // Update the hidden textarea with the value in the front-end editor.
             textarea.val(editor.getValue())
+            canSubmit = checkAllKeywordsPresent()
         })
     
         resetSubmitButton()
