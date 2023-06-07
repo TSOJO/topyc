@@ -85,7 +85,7 @@ def groups():
             db.session.delete(Group.query.get(group_id))
             
         db.session.commit()
-        flash('Saved', 'success')
+        flash('Group deleted', 'success')
         
     groups = Group.query.order_by(Group.name).all()
     return render_template('groups.html', groups=groups)
@@ -161,7 +161,7 @@ def group_progress(group_id):
             user.group_id = None
         
         db.session.commit()
-        flash('Saved', 'success')
+        flash('User removed', 'success')
         
     group = Group.query.get_or_404(group_id)
     tasks = Task.query.all()
@@ -204,7 +204,7 @@ def new_module():
     
     db.session.add(module)
     db.session.commit()
-    flash('Saved', 'success')
+    flash('Module created', 'success')
     return redirect(url_for('home_bp.home'))
 
 @admin_bp.route('/edit-module', methods=['POST'])
@@ -218,7 +218,7 @@ def edit_module():
     module.name = module_name
 
     db.session.commit()
-    flash('Saved', 'success')
+    flash('Module saved', 'success')
     return redirect(url_for('home_bp.home'))
 
 @admin_bp.route('/delete-module', methods=['POST'])
@@ -229,7 +229,7 @@ def delete_module():
     db.session.delete(module)
     db.session.commit()
     
-    flash('Saved', 'success')
+    flash('Module deleted', 'success')
     return redirect(url_for('home_bp.home'))
 
 @admin_bp.route('/new-task', methods=['POST'])
@@ -244,7 +244,7 @@ def new_task():
     
     db.session.add(task)
     db.session.commit()
-    flash('Saved', 'success')
+    flash('Task created', 'success')
     return redirect(url_for('admin_bp.edit_task', task_id=task.id))
 
 @admin_bp.route('/task/<task_id>/edit', methods=['GET', 'POST'])
@@ -270,7 +270,7 @@ def edit_task(task_id):
                 ))
         
         db.session.commit()
-        flash('Saved', 'success')
+        flash('Task saved', 'success')
         
     modules = Module.query.all()
     return render_template('edit_task.html', task=task, modules=modules)
@@ -283,7 +283,7 @@ def delete_task():
     db.session.delete(task)
     db.session.commit()
     
-    flash('Saved', 'success')
+    flash('Task deleted', 'success')
     return redirect(url_for('home_bp.home'))
 
 @admin_bp.route('/new-lesson', methods=['POST'])
