@@ -76,6 +76,34 @@
                         <a class="text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#delete-module{{ module.id }}-modal">
                             Delete module
                         </a>
+                        |
+                        <div class="modal fade" id="new-task{{ module.id }}-modal" tabindex="-1" aria-labelledby="new-task{{ module.id }}-modal-label" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="new-task{{ module.id }}-modal-label">New Task</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="post" action="{{ url_for('admin_bp.new_task') }}" class="needs-validation" novalidate>
+                                        <div class="modal-body">
+                                            <input type="hidden" name="module_id" value="{{ module.id }}" />
+                                            {{ module.id }}
+                                            <div class="mb-3">
+                                                <label for="task_number" class="form-label">Task number</label>
+                                                <input type="number" class="form-control" name="task_number" id="task_number" required />
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-success">Create</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#new-task{{ module.id }}-modal">
+                            Add task
+                        </a>
                         {% if not module.lesson %}
                         |
                         <form method="post" action="{{ url_for('admin_bp.new_lesson') }}" style="display:inline;">
@@ -172,39 +200,6 @@
         </div>
         <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-module-modal">
             New Module
-        </a>
-        <div class="modal fade" id="new-task-modal" tabindex="-1" aria-labelledby="new-task-modal-label" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="new-task-modal-label">New Task</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form method="post" action="{{ url_for('admin_bp.new_task') }}" class="needs-validation" novalidate>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="module_id" class="form-label">Module</label>
-                                <select id="module_id" name="module_id" class="form-select" required>
-                                    {% for module in modules %}
-                                    <option value="{{ module.id }}">{{ module.number }}. {{ module.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="task_number" class="form-label">Task number</label>
-                                <input type="number" class="form-control" name="task_number" id="task_number" required />
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Create</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#new-task-modal">
-            New Task
         </a>
         {% endif %}
     </div>

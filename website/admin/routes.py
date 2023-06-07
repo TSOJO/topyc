@@ -262,6 +262,9 @@ def edit_task(task_id):
         task.testcases = []
         for k, v in request.form.items():
             if k.startswith('input'):
+                # 'Y\r\nN' -> 'Y\nN'
+                v = '\n'.join([x.strip() for x in v.split()])
+                # Form input names are e.g., input2, answer2, etc.
                 raw_answer_keywords = request.form[k.replace('input', 'answer')].strip().split('\n')
                 answer_keywords = [x.strip() for x in raw_answer_keywords]
                 task.testcases.append(Testcase(
