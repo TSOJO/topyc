@@ -6,7 +6,7 @@
     <div class="row g-3">
         <div class="col-lg">
             <h3><small class="text-muted">{{ task.module.number }}.{{ task.number }}</small> {{ task.name }}</h3>
-            <md-block>{{ task.description }}</md-block>
+            <md-block>{{ task.description | safe }}</md-block>
             {% if task.required_keywords %}
             <p>You must use these keywords in your program:</p>
             <div class="mb-3">
