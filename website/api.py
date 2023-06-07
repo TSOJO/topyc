@@ -11,7 +11,8 @@ api_bp = Blueprint('api_bp', __name__)
 
 def check_keyword_present(text, keyword):
     text = text.replace('\n', ' ')
-    if keyword in text:
+    keyword_no_spaces = keyword.replace(' ', '')
+    if keyword in text or keyword_no_spaces in text:
         return True
     return False
 

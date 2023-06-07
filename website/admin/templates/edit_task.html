@@ -67,7 +67,7 @@
         <div class="mb-3">
             <label for="required-keywords" class="form-label">Required keywords</label>
             <textarea id="required-keywords" class="form-control consolas" name="required_keywords" rows="5">{{ task.required_keywords | join('\n') if task.required_keywords }}</textarea>
-            <div class="form-text">These are the keywords that the students must use in their program. Put each required keyword on its own line.</div>
+            <div class="form-text">These are the keywords that the students must use in their program. Put each required keyword on its own line. Variations by the student without spaces will also be accepted.</div>
         </div>
         <div class="mb-3">
             <label class="form-label">Testcases</label>
