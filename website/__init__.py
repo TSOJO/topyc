@@ -1,9 +1,9 @@
 from flask import Flask, request
 from flask_login import LoginManager, current_user
-
-from isolate_wrapper import IsolateSandbox
+from flask_migrate import Migrate
 
 login_manager = LoginManager()
+migrate = Migrate()
 
 def init_app():
     app = Flask(__name__)
@@ -28,6 +28,7 @@ def init_app():
     
     from website.model import db, User
     db.init_app(app)
+    migrate.init_app(app, db)
     
     login_manager.init_app(app)
     login_manager.login_view = 'user_bp.login'
