@@ -154,6 +154,33 @@ def download_group_excel(group_id):
         download_name=f'{group.name}.xlsx'
     )
 
+@admin_bp.route('/backup-restore', methods=['GET', 'POST'])
+def backup_restore():
+    if request.method == 'POST':
+        modules_json = request.form['modules']
+        tasks_json = request.form['tasks']
+        lessons_json = request.form['lessons']
+        
+        try:
+            for module in Module.query.all():
+                db.session.delete(module)
+            
+            for module in json.loads(modules_json):
+                db.session.add(Module(**module))
+            for task in json.loads(tasks_json):
+                db.session.add(Task(**task))
+            for lesson in json.loads(lessons_json):
+                db.session.add(Lesson(**lesson))
+            
+            db.session.commit()
+        except Exception as e:
+            flash(f'Restore cancelled. Something went wrong, make sure you are pasting the .json files exactly: {e}', 'error')
+            db.session.rollback()
+        else:
+            flash('Backup restored', 'success')
+        
+    return render_template('backup_restore.html')
+
 def table_to_json(table):
     return json.dumps(
         [dict((col, getattr(row, col)) for col in row.__table__.columns.keys()) for row in table.query.all()],

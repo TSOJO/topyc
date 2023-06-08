@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Backup/Restore{% endblock title %}
+
+{% block content %}
+<h3>Backup/Restore</h3>
+<div class="border p-4 mb-3">
+    <h5>Backup</h5>
+    <a href="{{ url_for('admin_bp.download_backup') }}" class="btn btn-primary mb-2">Download backup (.zip)</a>
+    <p>
+        This will only backup modules, tasks and lessons.
+        <br />
+        The zip file will contain 3 <code>.json</code> files - <code>modules.json</code>, <code>tasks.json</code> and <code>lessons.json</code>
+    </p>
+</div>
+<div class="border p-4 mb-3">
+    <h5>Restore</h5>
+    <p>
+        To restore modules, tasks and lessons from a backup, paste the content of each <code>.json</code> file into its respective textbox.
+        <br />
+        <mark><strong>Note: this will overwrite existing modules, tasks and lessons.</strong></mark>
+    </p>
+    <form method="post" class="needs-validation" novalidate>
+        <div class="row mb-3 g-3">
+            <div class="col-md-4">
+                <label for="modules" class="form-label"><code>modules.json</code></label>
+                <textarea id="modules" class="form-control" name="modules" rows="5"></textarea>
+            </div>
+            <div class="col-md-4">
+                <label for="tasks" class="form-label"><code>tasks.json</code></label>
+                <textarea id="tasks" class="form-control" name="tasks" rows="5"></textarea>
+            </div>
+            <div class="col-md-4">
+                <label for="lessons" class="form-label"><code>lessons.json</code></label>
+                <textarea id="lessons" class="form-control" name="lessons" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+            <label class="form-check-label" for="invalidCheck">
+                I understand this will overwrite existing modules, tasks and lessons.
+            </label>
+            <div class="invalid-feedback">
+              You must check this before submitting.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-warning">Restore</button>
+    </form>
+</div>
+{% endblock content %}
