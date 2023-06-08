@@ -52,8 +52,8 @@ function getLongVerdict(verdict) {
 }
 
 function checkKeywordPresent(text, keyword) {
-    text = text.replaceAll('\n', ' ')
-    keywordNoSpaces = keyword.replaceAll(' ', '')
+    text = text.replace(/\n/g, ' ')
+    keywordNoSpaces = keyword.replace(/ /g, '')
     if (text.includes(keyword) || text.includes(keywordNoSpaces)) {
         return true;
     }
