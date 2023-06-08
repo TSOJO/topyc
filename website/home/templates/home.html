@@ -87,7 +87,8 @@
                                     <form method="post" action="{{ url_for('admin_bp.new_task') }}" class="needs-validation" novalidate>
                                         <div class="modal-body">
                                             <input type="hidden" name="module_id" value="{{ module.id }}" />
-                                            <div class="mb-3">
+                                            This will add a new task to module: {{ module.number }}. {{ module.name }}.
+                                            <div class="mt-2 mb-3">
                                                 <label for="task_number" class="form-label">Task number</label>
                                                 <input type="number" class="form-control" name="task_number" id="task_number" required />
                                             </div>
