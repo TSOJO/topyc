@@ -52,8 +52,8 @@ function getLongVerdict(verdict) {
 }
 
 function checkKeywordPresent(text, keyword) {
-    text = text.replace(/\n/g, ' ')
-    keywordNoSpaces = keyword.replace(/ /g, '')
+    text = text.replaceAll('\n', ' ')
+    keywordNoSpaces = keyword.replaceAll(' ', '')
     if (text.includes(keyword) || text.includes(keywordNoSpaces)) {
         return true;
     }
@@ -64,7 +64,7 @@ function checkAllKeywordsPresent() {
     if ($('#keywords').length) {  // exists
         let res = true
         $('#keywords').children().each((_, child) => {
-            let keyword = $(child).data('keyword')
+            let keyword = String($(child).data('keyword'))
             if (checkKeywordPresent($('#user-code').val(), keyword)) {
                 $(child).addClass('list-group-item-success')
             } else {
