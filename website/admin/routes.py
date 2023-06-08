@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, abort, request, flash, send_file, 
 from flask_login import current_user
 from io import BytesIO
 from openpyxl import Workbook
+import json
+import zipfile
 
 from website.model import db, User, Group, Task, Module, Submission, Testcase, Lesson
 from isolate_wrapper import Verdict
@@ -150,6 +152,32 @@ def download_group_excel(group_id):
         file_stream,
         as_attachment=True,
         download_name=f'{group.name}.xlsx'
+    )
+
+def table_to_json(table):
+    return json.dumps(
+        [dict((col, getattr(row, col)) for col in row.__table__.columns.keys()) for row in table.query.all()],
+        indent=4
+    )
+
+@admin_bp.route('/download-backup')
+def download_backup():
+    file_stream = BytesIO()
+    
+    with zipfile.ZipFile(file_stream, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for file_name, table in [
+            ('tasks.json', Task),
+            ('lessons.json', Lesson),
+            ('modules.json', Module)
+        ]:
+            zipf.writestr(file_name, table_to_json(table))
+    
+    file_stream.seek(0)
+    
+    return send_file(
+        file_stream,
+        as_attachment=True,
+        download_name='backup.zip'
     )
 
 @admin_bp.route('/group/<group_id>', methods=['GET', 'POST'])
