@@ -115,7 +115,7 @@ def settings():
         if 'name' in request.form:
             current_user.name = request.form['name']
             flash('Saved', 'success')
-        elif 'group' in request.form:
+        elif 'group_id' in request.form:
             current_user.group = Group.query.get(request.form['group_id'])
             flash('Saved', 'success')
         db.session.commit()
