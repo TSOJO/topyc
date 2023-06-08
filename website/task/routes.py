@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort, url_for
+from flask_login import current_user
+
 from website.model import db, Task, Lesson
 from isolate_wrapper import Verdict
 
@@ -8,6 +10,9 @@ task_bp = Blueprint(
 
 @task_bp.route('/<module_number>/<task_number>')
 def task(module_number, task_number):
+    if not current_user.is_admin and not current_user.group:
+        abort(403, description='You must be in a group to do tasks. Join a group <a href="' + url_for('user_bp.settings') + '" class="text-decoration-none">here</a>.')
+    
     task = db.first_or_404(
         Task.query.filter(
             Task.module.has(number=module_number),
@@ -24,5 +29,4 @@ def lesson(module_number):
             Lesson.module.has(number=module_number)
         )
     )
-    print(lesson.text)
     return render_template('lesson.html', lesson=lesson)

@@ -3,6 +3,6 @@
 
 {% block content %}
 <h1>404</h1>
-<p>{{ description }}</p>
+<p>{{ description | safe }}</p>
 <a href="{{ url_for('home_bp.home') }}" class="text-decoration-none">Home</a>
 {% endblock content %}

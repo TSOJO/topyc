@@ -80,7 +80,7 @@
                     {% if category == 'error' %}
                         <div class="alert alert-danger alert-dismissable fade show d-flex justify-content-between"
                              role="alert">
-                            {{ message }}
+                            {{ message | safe }}
                             <button type="button"
                                     class="btn-close"
                                     data-bs-dismiss="alert"
@@ -89,7 +89,7 @@
                     {% else %}
                         <div class="alert alert-success alert-dismissable fade show d-flex justify-content-between"
                              role="alert">
-                            {{ message }}
+                            {{ message | safe }}
                             <button type="button"
                                     class="btn-close"
                                     data-bs-dismiss="alert"
@@ -99,6 +99,13 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+        
+        {% if current_user.is_authenticated and not current_user.is_admin and not current_user.group %}
+        <div class="alert alert-danger"
+            role="alert">
+            You must be in a group to do tasks. Join a group <a href="{{ url_for('user_bp.settings') }}" class="text-decoration-none">here</a>.
+        </div>
+        {% endif %}
 
         <div class="container p-3">
             {% block content %}{% endblock content %}
