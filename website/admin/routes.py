@@ -174,7 +174,7 @@ def backup_restore():
             
             db.session.commit()
         except Exception as e:
-            flash(f'Restore cancelled. Something went wrong, make sure you are pasting the .json files exactly: {e}', 'error')
+            flash(f'<span><strong>Restore cancelled. Something went wrong:</strong><br />{e}<br /><strong>Make sure you are pasting the .json files exactly.</strong></span>', 'error')
             db.session.rollback()
         else:
             flash('Backup restored', 'success')
