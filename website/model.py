@@ -14,7 +14,7 @@ class Task(db.Model):
     required_keywords = db.Column(db.ARRAY(db.TEXT))
     
     module = db.relationship('Module', back_populates='tasks')
-    testcases = db.relationship('Testcase', back_populates='task', cascade='all, delete-orphan')
+    testcases = db.relationship('Testcase', back_populates='task', cascade='all, delete')
     submissions = db.relationship('Submission', back_populates='task', cascade='all, delete-orphan')
 
 class Lesson(db.Model):
@@ -34,7 +34,7 @@ class Module(db.Model):
 
 class Testcase(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
-    task_id = db.Column(db.ForeignKey('task.id'), nullable=False)
+    task_id = db.Column(db.ForeignKey('task.id'))
     input = db.Column(db.TEXT)
     answer_keywords = db.Column(db.ARRAY(db.TEXT))
     
