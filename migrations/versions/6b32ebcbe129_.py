@@ -1,4 +1,4 @@
-"""empty message
+"""Add Lesson table.
 
 Revision ID: 6b32ebcbe129
 Revises: aa3a56595c24
