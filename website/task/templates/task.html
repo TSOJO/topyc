@@ -17,7 +17,7 @@
             </div>
             <md-block>{{ task.description | safe if task.description }}</md-block>
             {% if task.required_keywords != [''] %}
-            <p>You must use these keywords in your program:</p>
+            <p>You must use the following in your program:</p>
             <div class="mb-3">
                 <ul class="list-group" id="keywords">
                     {% for keyword in task.required_keywords %}
