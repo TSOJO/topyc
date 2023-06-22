@@ -28,6 +28,7 @@ class Module(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     number = db.Column(db.INTEGER, nullable=False)
     name = db.Column(db.TEXT)
+    visible = db.Column(db.BOOLEAN, nullable=False)
     
     tasks = db.relationship('Task', back_populates='module', cascade='all, delete-orphan')
     lesson = db.relationship('Lesson', uselist=False, back_populates='module', cascade='all, delete-orphan')

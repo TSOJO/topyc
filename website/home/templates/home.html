@@ -10,9 +10,20 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button {% if module in user_done_modules %} collapsed {% endif %} row mx-0" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
-                        <span class="col-10">
-                            {{ module.number }}. {{ module.name }}
-                        </span>
+                        <div class="col-10 d-flex align-items-center">
+                            <span class="col-auto me-2">
+                                {{ module.number }}. {{ module.name }}
+                            </span>
+                            <span class="col">
+                                <span class="badge bg-{%- if module.visible -%}success{%- else -%}danger{%- endif -%}">
+                                    {% if module.visible %}
+                                    VISIBLE
+                                    {% else %}
+                                    INVISIBLE
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
                         {% set user_done_in_module = user_done_tasks | selectattr('module', 'equalto', module) | list | length %}
                         <span class="badge bg-{%- if user_done_in_module == module.tasks | length -%}success{%- else -%}secondary{%- endif %} rounded-pill col-auto">
                             {{ user_done_in_module }} / {{ module.tasks | length }}
@@ -39,6 +50,12 @@
                                             <div class="mb-3">
                                                 <label for="module_name" class="form-label">Module name</label>
                                                 <input type="text" class="form-control" name="module_name" value="{{ module.name }}" id="module_name" required />
+                                            </div>
+                                            <div class="form-check">
+                                                <label for="module_visible" class="form-check-label">
+                                                    Visible?
+                                                </label>
+                                                <input type="checkbox" class="form-check-input" name="module_visible" value="" id="module_visible" {%- if module.visible -%}checked{%- endif -%}>
                                             </div>
                                         </div>
                                         <div class="modal-footer">

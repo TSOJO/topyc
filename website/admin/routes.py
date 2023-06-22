@@ -274,10 +274,12 @@ def edit_module():
     module_id = request.form['module_id']
     module_number = request.form['module_number']
     module_name = request.form['module_name']
+    module_visible = 'module_visible' in request.form
     
     module = Module.query.get_or_404(module_id)
     module.number = module_number
     module.name = module_name
+    module.visible = module_visible
 
     db.session.commit()
     flash('Module saved', 'success')
