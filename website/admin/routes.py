@@ -279,7 +279,7 @@ def edit_module():
     module = Module.query.get_or_404(module_id)
     module.number = module_number
     module.name = module_name
-    module.visible = module_visible
+    module.is_visible = module_visible
 
     db.session.commit()
     flash('Module saved', 'success')

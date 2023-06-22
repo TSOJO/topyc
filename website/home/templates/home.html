@@ -7,6 +7,7 @@
     <div class="col-lg-6 mx-auto">
         <div class="accordion" id="task-listing">
             {% for module in modules %}
+            {% if current_user.is_admin or module.is_visible %}
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button {% if module in user_done_modules %} collapsed {% endif %} row mx-0" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
@@ -14,15 +15,17 @@
                             <span class="col-auto me-2">
                                 {{ module.number }}. {{ module.name }}
                             </span>
+                            {% if current_user.is_admin %}
                             <span class="col">
-                                <span class="badge bg-{%- if module.visible -%}success{%- else -%}danger{%- endif -%}">
-                                    {% if module.visible %}
+                                <span class="badge bg-{%- if module.is_visible -%}success{%- else -%}danger{%- endif -%}">
+                                    {% if module.is_visible %}
                                     VISIBLE
                                     {% else %}
                                     INVISIBLE
                                     {% endif %}
                                 </span>
                             </span>
+                            {% endif %}
                         </div>
                         {% set user_done_in_module = user_done_tasks | selectattr('module', 'equalto', module) | list | length %}
                         <span class="badge bg-{%- if user_done_in_module == module.tasks | length -%}success{%- else -%}secondary{%- endif %} rounded-pill col-auto">
@@ -55,7 +58,7 @@
                                                 <label for="module_visible" class="form-check-label">
                                                     Visible?
                                                 </label>
-                                                <input type="checkbox" class="form-check-input" name="module_visible" value="" id="module_visible" {%- if module.visible -%}checked{%- endif -%}>
+                                                <input type="checkbox" class="form-check-input" name="module_visible" value="" id="module_visible" {%- if module.is_visible -%}checked{%- endif -%}>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -185,6 +188,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
     </div>

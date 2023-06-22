@@ -13,12 +13,17 @@ def task(module_number, task_number):
     if not current_user.is_admin and not current_user.group:
         abort(403, description='You must be in a group to do tasks. Join a group <a href="' + url_for('user_bp.settings') + '" class="text-decoration-none">here</a>.')
     
+    
     task = db.first_or_404(
         Task.query.filter(
             Task.module.has(number=module_number),
             Task.number==task_number
         )
     )
+    
+    if not (current_user.is_admin or task.module.is_visible):
+        abort(403, description='The module to which this task belongs is marked as invisible by an admin.')
+        
     verdict_map = {v.name: v.value for v in Verdict}
     return render_template('task.html', task=task, verdict_map=verdict_map)
 
