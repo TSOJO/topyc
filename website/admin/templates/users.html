@@ -15,72 +15,86 @@
 {% endif %}
 {% endfor %}
 <p>Showing {{ users_page.first }} - {{ users_page.last}} of {{users_page.total}}</p>
-<table class="table table-striped">
-    <thead>
-        <tr class="d-flex">
-            <th scope="col" class="col-3">Email<br />(@tonbridge-school.org)</th>
-            <th scope="col" class="col-2">Name</th>
-            <th scope="col" class="col-2">Group</th>
-            <th scope="col" class="col-2"></th>
-            <th scope="col" class="col-2"></th>
-            <th scope="col" class="col-1">Admin?</th>
-        </tr>
-    </thead>
-    <tbody class="table-group-divider">
-        {% for user in users_page %}
-        <tr class="d-flex">
-            <th scope="row" class="col-3 text-break">{{ user.email.split('@')[0] }}</th>
-            <td class="col-2 text-break">{{ user.name }}</td>
-            <td class="col-2">
-                <form method="post">
-                    <input type="hidden" name="action" value="change_group" />
-                    <input type="hidden" name="user_id" value="{{ user.id }}" />
-                    <select name="group_id" class="form-select user-group-select">
-                        <option value="-1" {% if not user.group %}selected{% endif %}>-</option>
-                        {% for group in groups %}
-                        <option value="{{ group.id }}" {% if user.group.id == group.id %}selected{% endif %}>{{ group.name }}</option>
-                        {% endfor %}
-                    </select>
-                </form>
-            </td>
-            <td class="col-2 text-center">
-                <a class="btn btn-primary" href="{{ url_for('admin_bp.user_progress', user_id=user.id) }}">View progress</a>
-            </td>
-            <td class="col-2">
-                <form method="post">
-                    <div class="modal fade" id="confirm{{ loop.index }}-modal" tabindex="-1" aria-labelledby="confirm{{ loop.index }}-modal-label" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="confirm{{ loop.index }}-modal-label">Confirm deletion</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    This can't be undone.
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-danger">Delete user</button>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr class="d-flex">
+                <th scope="col" class="col-3">Email<br />(@tonbridge-school.org)</th>
+                <th scope="col" class="col-4">Name</th>
+                <th scope="col" class="col-2">Group</th>
+                <th scope="col" class="col-2"></th>
+                <th scope="col" class="col-1">Admin?</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for user in users_page %}
+            <tr class="d-flex">
+                <th scope="row" class="col-3 text-break align-middle">{{ user.email.split('@')[0] }}</th>
+                <td class="col-4 text-break">
+                    <form method="post">
+                        <input type="hidden" name="action" value="change_name" />
+                        <input type="hidden" name="user_id" value="{{ user.id }}" />
+                        <div class="input-group">
+                            <input type="text" name="name" class="form-control" value="{{ user.name }}" />
+                            <button type="submit" name="button" class="btn btn-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </td>
+                <td class="col-2">
+                    <form method="post">
+                        <input type="hidden" name="action" value="change_group" />
+                        <input type="hidden" name="user_id" value="{{ user.id }}" />
+                        <select name="group_id" class="form-select user-group-select">
+                            <option value="-1" {% if not user.group %}selected{% endif %}>-</option>
+                            {% for group in groups %}
+                            <option value="{{ group.id }}" {% if user.group.id == group.id %}selected{% endif %}>{{ group.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </td>
+                <td class="col-2">
+                    <form method="post">
+                        <div class="modal fade" id="confirm{{ loop.index }}-modal" tabindex="-1" aria-labelledby="confirm{{ loop.index }}-modal-label" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="confirm{{ loop.index }}-modal-label">Confirm deletion</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        This can't be undone.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-danger">Delete user</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <input type="hidden" name="action" value="delete_user" />
-                    <input type="hidden" name="user_id" value="{{ user.id }}" />
-                    <div class="text-center">
-                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm{{ loop.index }}-modal">Delete user</a>
-                    </div>
-                </form>
-            </td>
-            <td class="col-1">
-                <form method="post">
-                    <input type="hidden" name="action" value="update_admin" />
-                    <input type="hidden" name="user_id" value="{{ user.id }}" />
-                    <input class="form-check-input admin-check" type="checkbox" name="admin_check" value="" {% if user.is_admin %} checked {% endif %} {% if user == current_user %} disabled {% endif %} />
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                        <input type="hidden" name="action" value="delete_user" />
+                        <input type="hidden" name="user_id" value="{{ user.id }}" />
+                        <div class="text-center">
+                            <div class="btn-group-vertical btn-group-sm">
+                                <a class="btn btn-primary" href="{{ url_for('admin_bp.user_progress', user_id=user.id) }}">Progress</a>
+                                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm{{ loop.index }}-modal">Delete</a>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+                <td class="col-1">
+                    <form method="post">
+                        <input type="hidden" name="action" value="update_admin" />
+                        <input type="hidden" name="user_id" value="{{ user.id }}" />
+                        <input class="form-check-input admin-check" type="checkbox" name="admin_check" value="" {% if user.is_admin %} checked {% endif %} {% if user == current_user %} disabled {% endif %} />
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock content %}

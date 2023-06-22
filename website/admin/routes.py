@@ -27,7 +27,14 @@ def submission(submission_id):
 @admin_bp.route('/users', methods=['GET', 'POST'])
 def users():
     if request.method == 'POST':
-        if request.form['action'] == 'change_group':
+        if request.form['action'] == 'change_name':
+            name = request.form['name']
+            user_id = request.form['user_id']
+            
+            user = User.query.get(user_id)
+            user.name = name
+            
+        elif request.form['action'] == 'change_group':
             user_id = request.form['user_id']
             group_id = request.form['group_id']
             
