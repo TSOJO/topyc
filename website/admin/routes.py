@@ -67,7 +67,7 @@ def users():
                 body=f'Hi {user.name},\nYour new password is: {password}\nBest regards,\nToPyC'
             )
             
-            flash(f'<span>Password reset successfully - {user.name}\'s new password is:<br /><strong class=\"consolas\">{password}</strong><br />This is the last time you will see it!</span>', 'success')            
+            flash(f'<span>Password reset successfully; the new password has been sent to {user.email}. {user.name}\'s new password is:<br /><strong class=\"consolas\">{password}</strong><br />This is the last time you will see it!</span>', 'success')            
             
         db.session.commit()
         flash('Saved', 'success')
