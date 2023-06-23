@@ -77,7 +77,7 @@
                         </div>
                         <input type="hidden" name="action" value="delete_user" />
                         <input type="hidden" name="user_id" value="{{ user.id }}" />
-                        <div class="text-center">
+                        <div class="text-center text-break">
                             <div class="btn-group-vertical btn-group-sm">
                                 <a class="btn btn-primary" href="{{ url_for('admin_bp.user_progress', user_id=user.id) }}">Progress</a>
                                 <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm{{ loop.index }}-modal">Delete</a>
