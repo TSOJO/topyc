@@ -57,6 +57,7 @@
                     </form>
                 </td>
                 <td class="col-2">
+                    {% if user != current_user %}
                     <div class="modal fade" id="confirm{{ loop.index }}-modal" tabindex="-1" aria-labelledby="confirm{{ loop.index }}-modal-label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -78,6 +79,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     <div class="text-center text-break">
                         <form method="post">
                         <div class="btn-group-vertical btn-group-sm">
@@ -85,7 +87,9 @@
                                 <input type="hidden" name="action" value="reset_password" />
                                 <input type="hidden" name="user_id" value="{{ user.id }}" />
                                 <button type="submit" class="btn btn-warning" onclick="spinner(this);">Reset password</button>
+                                {% if user != current_user %}
                                 <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm{{ loop.index }}-modal">Delete</a>
+                                {% endif %}
                             </div>
                         </form>
                     </div>
