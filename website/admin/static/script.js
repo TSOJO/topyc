@@ -19,6 +19,10 @@ try {
 }
 catch (e) {}
 
+function spinner(el) {
+    $(el).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>')
+}
+
 function removeTestcase(number) {
     let numTestcases = $('#testcases').children('.testcase').length
     $('#testcase' + number).remove()

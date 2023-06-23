@@ -72,15 +72,18 @@ def insert_debug_db(db):
     modules = [
         Module(
             number=3,
-            name='Selection'
+            name='Selection',
+            is_visible=True,
         ),
         Module(
             number=1,
-            name='Input'
+            name='Input',
+            is_visible=True,
         ),
         Module(
             number=4,
-            name='aswesoemn'
+            name='aswesoemn',
+            is_visible=True,
         )
     ]
     

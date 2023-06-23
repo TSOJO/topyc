@@ -4,8 +4,10 @@ from io import BytesIO
 from openpyxl import Workbook
 import json
 import zipfile
+from werkzeug.security import generate_password_hash
 
 from website.model import db, User, Group, Task, Module, Submission, Testcase, Lesson
+from website.util import generate_password, send_email
 from isolate_wrapper import Verdict
 
 admin_bp = Blueprint(
@@ -50,6 +52,22 @@ def users():
             
             user = User.query.get(user_id)
             user.is_admin = 'admin_check' in request.form
+        
+        elif request.form['action'] == 'reset_password':
+            user_id = request.form['user_id']
+            user = User.query.get(user_id)
+            
+            password = generate_password()
+            password_hash = generate_password_hash(password)
+            user.password_hash = password_hash
+            
+            send_email(
+                to_email=user.email,
+                subject='Your new ToPyC password',
+                body=f'Hi {user.name},\nYour new password is: {password}\nBest regards,\nToPyC'
+            )
+            
+            flash(f'<span>Password reset successfully - {user.name}\'s new password is:<br /><strong class=\"consolas\">{password}</strong><br />This is the last time you will see it!</span>', 'success')            
             
         db.session.commit()
         flash('Saved', 'success')
