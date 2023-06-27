@@ -8,3 +8,10 @@
 .consolas {
     font-family: Consolas;
 }
+
+.sticky-left-column th:first-child,
+.sticky-left-column td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: rgb(245, 245, 245);
+}
