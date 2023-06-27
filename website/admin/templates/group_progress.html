@@ -32,21 +32,39 @@
             {% set user_loop = loop %}
             <tr>
                 <th scope="col">
-                    <div>
-                        {{ user.name }}
-                    </div>
-                    <div class="fw-normal">
-                        ({{ user.email }})
-                    </div>
-                    <div>
-                        <form method="post">
-                            <input type="hidden" name="action" value="remove_user" />
-                            <input type="hidden" name="user_id" value="{{ user.id }}" />
-                            <a onclick="this.closest('form').submit();return false;" href="#" class="text-decoration-none">
-                                Remove student from group
-                            </a>
-                        </form>
-                    </div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <nobr>
+                                        {% if user.name %}
+                                        <div>
+                                            {{ user.name }}
+                                        </div>
+                                        {% else %}
+                                        <div class="fw-normal">
+                                            {{ user.email }}
+                                            <br />
+                                            <span class="text-danger">(This user has not set their name!)</span>
+                                        </div>
+                                        {% endif %}
+                                    </nobr>
+                                </td>
+                                <td>
+                                    <form method="post">
+                                        <input type="hidden" name="action" value="remove_user" />
+                                        <input type="hidden" name="user_id" value="{{ user.id }}" />
+                                        <button type="submit" class="btn btn-outline-danger px-1 py-0 ms-2" data-bs-toggle="tooltip" data-bs-title="Remove from group">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </th>
                 {% for module in modules | sort(attribute='number') %}
                 {% set module_loop = loop %}
