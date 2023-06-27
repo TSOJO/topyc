@@ -279,7 +279,8 @@ def new_module():
     
     module = Module(
         number=module_number,
-        name=module_name
+        name=module_name,
+        is_visible=True
     )
     
     db.session.add(module)
