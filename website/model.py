@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from flask_login import UserMixin
 
 from isolate_wrapper import Verdict
@@ -63,9 +64,9 @@ class Submission(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
     task_id = db.Column(db.ForeignKey('task.id'), nullable=False)
-    time_submitted = db.Column(db.TIMESTAMP)
-    overall_verdict = db.Column(db.Enum(Verdict))
-    source_code = db.Column(db.TEXT)
+    time_submitted = db.Column(db.TIMESTAMP, nullable=False, server_default=func.now())
+    overall_verdict = db.Column(db.Enum(Verdict), nullable=False)
+    source_code = db.Column(db.TEXT, nullable=False)
     
     user = db.relationship('User', back_populates='submissions')
     task = db.relationship('Task', back_populates='submissions')
