@@ -242,33 +242,44 @@ def group_progress(group_id):
         
         db.session.commit()
         flash('User removed', 'success')
-        
+    
     group = Group.query.get_or_404(group_id)
     tasks = Task.query.all()
     modules = Module.query.all()
     correct_tasks = {}
-    tasks_with_submissions = {}
-    for user in group.users:
-        correct_tasks[user.id] = db.session.query(Task) \
-                                            .join(Submission) \
-                                            .filter(Submission.user_id == user.id,
-                                                    Submission.overall_verdict == Verdict.AC) \
-                                            .distinct()
-        tasks_with_submissions[user.id] = db.session.query(Task) \
-                                                    .join(Submission) \
-                                                    .filter(Task.submissions,
-                                                            Submission.user_id == user.id) \
-                                                    .distinct()
+    attempted_tasks = {}
+    
+    all_user_tasks = db.session.query(User, Task) \
+                                    .select_from(User) \
+                                    .join(Submission) \
+                                    .join(Task) \
+                                    .join(Group) \
+                                    .filter(Group.id == group.id)
+                                    
+    correct_user_tasks = all_user_tasks.filter(Submission.overall_verdict == Verdict.AC).distinct()
+    for user, task in correct_user_tasks:
+        if user.id not in correct_tasks:
+            correct_tasks[user.id] = set()
+        correct_tasks[user.id].add(task)
+        
+    # Attempted means the user has submitted something. May or may not be correct.
+    # If user has not submitted anything to the task, then the Task will not be joined as it is joined from Submission.
+    attempted_user_tasks = all_user_tasks.distinct()
+    for user, task in attempted_user_tasks:
+        if user.id not in attempted_tasks:
+            attempted_tasks[user.id] = set()
+        attempted_tasks[user.id].add(task)
+        
     verdict_map = {v.name: v.value for v in Verdict}
     verdict_map['AC'] = 'Correct'
-
+    
     return render_template(
         'group_progress.html',
         group=group,
         tasks=tasks,
         modules=modules,
         correct_tasks=correct_tasks,
-        tasks_with_submissions=tasks_with_submissions,
+        attempted_tasks=attempted_tasks,
         verdict_map=verdict_map
     )
 
