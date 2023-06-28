@@ -27,14 +27,12 @@ try {
         let taskID = $(e.currentTarget).data('task-id')
 
         spinner('#submissions-' + userID + '-' + taskID)
-        console.log(userID, taskID)
 
         fetch('/api/get-submissions/' + userID + '/' + taskID)
             .then(response => response.json())
             .then(json => {
                 html = []
                 for (submission of json.submissions) {
-                    console.log(submission)
                     html.push(...[
                         '<tr>',
                         '   <th scope="row">',
@@ -77,7 +75,6 @@ function removeTestcase(number) {
     let numTestcases = $('#testcases').children('.testcase').length
     $('#testcase' + number).remove()
     for (let i = number; i <= numTestcases; i++) {
-        console.log(i)
         $('#testcase' + i).attr('id', 'testcase' + (i-1))
         $('#testcase-number' + i).html('#' + (i-1))
         $('#testcase-number' + i).attr('id', 'testcase-number' + (i-1))
