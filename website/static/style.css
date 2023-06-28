@@ -9,8 +9,8 @@
     font-family: Consolas;
 }
 
-.sticky-left-column th:first-child,
-.sticky-left-column td:first-child {
+.sticky-left-column>thead>tr>th:first-child,
+.sticky-left-column>tbody>tr>th:first-child {
     position: sticky;
     left: 0;
     background-color: rgb(245, 245, 245);
