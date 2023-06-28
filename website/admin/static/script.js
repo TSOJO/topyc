@@ -1,12 +1,12 @@
 try {
-    $('.user-group-select').change((e) => {
+    $('.user-group-select').change(e => {
         e.target.form.submit()
     })
 }
 catch (e) {}
 
 try {
-    $('.admin-check').change((e) => {
+    $('.admin-check').change(e => {
         e.target.form.submit()
     })
 }
@@ -15,6 +15,56 @@ catch (e) {}
 try {
     $('#description').on('input', () => {
         $('#description-md')[0].mdContent = $('#description').val()
+    })
+}
+catch (e) {}
+
+try {
+    $('.get-submissions').on('click', e => {
+        // `e.target` would point to the <path> tag that the user clicked on which triggered the event.
+        // `e.currentTarget` points to the <a> tag where the event listener has been attached.
+        let userID = $(e.currentTarget).data('user-id')
+        let taskID = $(e.currentTarget).data('task-id')
+
+        spinner('#submissions-' + userID + '-' + taskID)
+        console.log(userID, taskID)
+
+        fetch('/api/get-submissions/' + userID + '/' + taskID)
+            .then(response => response.json())
+            .then(json => {
+                html = []
+                for (submission of json.submissions) {
+                    console.log(submission)
+                    html.push(...[
+                        '<tr>',
+                        '   <th scope="row">',
+                                submission.timeSubmitted,
+                        '   </th>',
+                        '   <td>',
+                    ])
+                    if (submission.overallVerdict == 'AC') {
+                        html.push(HTMLTick(getLongVerdict(submission.overallVerdict)))
+                    } else if (submission.overallVerdict === 'WA') {
+                        html.push(HTMLCross(getLongVerdict(submission.overallVerdict)))
+                    } else {
+                        html.push(HTMLBang(getLongVerdict(submission.overallVerdict)))
+                    }
+                    html.push(...[
+                        '   </td>',
+                        '   <td>',
+                        '       <a class="text-decoration-none" href="/admin/submission/' + submission.id + '">',  // ! HARDCODED
+                        '           Details',
+                        '       </a>',
+                        '   </td>',
+                        '</tr>'
+                    ])
+                }
+                $('#submissions-' + userID + '-' + taskID).html(html.join(''))
+                $('[data-bs-toggle="tooltip"]').tooltip()
+                $('[data-bs-toggle="tooltip"]').on('mouseleave', function () {
+                    $(this).tooltip('hide')
+                })
+            })
     })
 }
 catch (e) {}

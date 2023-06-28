@@ -96,3 +96,26 @@ def submit_code():
         'results': results
     }
     return jsonify(response)
+
+@api_bp.route('/get-submissions/<user_id>/<task_id>')
+def get_submissions(user_id, task_id):
+    if not current_user.is_admin:
+        return '', 403
+    
+    submissions = Submission.query \
+                            .filter_by(user_id=user_id, task_id=task_id) \
+                            .order_by(Submission.time_submitted.desc()) \
+                            .all()
+    
+    response = {
+        'submissions': [
+            {
+                'id': submission.id,
+                'overallVerdict': str(submission.overall_verdict),
+                'timeSubmitted': submission.time_submitted.strftime('%d/%m/%Y %H:%M')
+            }
+            for submission in submissions
+        ]
+    }
+    
+    return jsonify(response)
