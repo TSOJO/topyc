@@ -349,8 +349,37 @@ def insert_debug_db(db):
             password_hash=generate_password_hash('mark'),
             name='Mark Addmeen',
             is_admin=True,
+            group_id=1
         )
     ]
     
-    db.session.add_all([*modules, *tasks, *testcases, *groups, *users])
+    from website.model import Submission
+    import random
+    from isolate_wrapper.custom_types import Verdict
+    
+    vs = [Verdict.AC, Verdict.WA, Verdict.RE]
+    ss = []
+    for _ in range(2000):
+        s = Submission(
+            user_id=random.randint(1,22),
+            task_id=random.randint(1,31),
+            overall_verdict=random.choice(vs),
+            source_code=""
+        )
+        ss.append(s)
+    
+    import string
+    
+    us = []
+    for _ in range(20):
+        u = User(
+            email=''.join(random.choice(string.ascii_letters) for _ in range(10)) + '@tonbridge-school.org',
+            password_hash='',
+            name=''.join(random.choice(string.ascii_letters) for _ in range(5)) + ' ' + ''.join(random.choice(string.ascii_letters) for _ in range(5)),
+            is_admin=False,
+            group_id=1
+        )
+        us.append(u)
+    
+    db.session.add_all([*modules, *tasks, *testcases, *groups, *users, *us, *ss])
     db.session.commit()
