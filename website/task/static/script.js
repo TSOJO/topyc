@@ -67,7 +67,7 @@ window.onpageshow = () => {
     
         resetSubmitButton()
     
-        $('#submit-button').click(function() {
+        $('#submit-button').unbind('click').click(function() {
             canSubmit = checkAllKeywordsPresent()
             if (canSubmit) {
                 textarea.val(editor.getValue())
