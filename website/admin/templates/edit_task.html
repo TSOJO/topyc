@@ -88,6 +88,12 @@
                                 <label for="answer{{ loop.index }}" class="form-label" id="answer-label{{ loop.index }}">Answer keywords</label>
                                 <textarea id="answer{{ loop.index }}" class="form-control consolas" name="answer{{ loop.index }}" rows="5">{{ testcase.answer_keywords | join('\n') }}</textarea>
                                 <div class="form-text">These are the keywords that must appear in the student's program output for it to be marked as correct. Put each answer keyword on its own line. Case-insensitive.</div>
+                                <div class="form-check">
+                                    <input type="checkbox" value="" id="ordered{{ loop.index }}" class="form-check-input" name="ordered{{ loop.index }}" {% if testcase.is_ordered %} checked {% endif %}>
+                                    <label for="ordered{{ loop.index }}" class="form-check-label" id="ordered-label{{ loop.index }}">
+                                        Are these keywords ordered?
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <hr />

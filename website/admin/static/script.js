@@ -88,6 +88,10 @@ function removeTestcase(number) {
         $('#answer-label' + i).attr('id', 'answer-label' + (i-1))
         $('#answer' + i).attr('name', 'answer' + (i-1))
         $('#answer' + i).attr('id', 'answer' + (i-1))
+        $('#ordered-label' + i).attr('for', 'ordered' + (i-1))
+        $('#ordered-label' + i).attr('id', 'ordered-label' + (i-1))
+        $('#ordered' + i).attr('name', 'ordered' + (i-1))
+        $('#ordered' + i).attr('id', 'ordered' + (i-1))
     }
 }
 
@@ -110,6 +114,12 @@ try {
                         '<label for="answer' + number + '" class="form-label" id="answer-label' + number + '">Answer keywords</label>',
                         '<textarea id="answer' + number + '" class="form-control consolas" name="answer' + number + '" rows="5"></textarea>',
                         '<div class="form-text">These are the keywords that must appear in the student\'s program output for it to be marked as correct. Put each answer keyword on its own line. Case-insensitive.</div>',
+                        '<div class="form-check">',
+                            '<input type="checkbox" value="" id="ordered' + number + '" class="form-check-input" name="ordered' + number + '">',
+                            '<label for="ordered' + number + '" class="form-check-label" id="ordered-label' + number + '">',
+                                'Are these keywords ordered?',
+                            '</label>',
+                        '</div>',
                     '</div>',
                 '</div>',
                 '<hr />',

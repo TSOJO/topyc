@@ -361,9 +361,11 @@ def edit_task(task_id):
                 # Form input names are e.g., input2, answer2, etc.
                 raw_answer_keywords = request.form[k.replace('input', 'answer')].strip().split('\n')
                 answer_keywords = [x.strip() for x in raw_answer_keywords]
+                is_ordered = k.replace('input', 'ordered') in request.form
                 task.testcases.append(Testcase(
                     input=v,
-                    answer_keywords=answer_keywords
+                    answer_keywords=answer_keywords,
+                    is_ordered=is_ordered
                 ))
         
         db.session.commit()

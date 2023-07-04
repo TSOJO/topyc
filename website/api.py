@@ -16,6 +16,20 @@ def check_keyword_present(text, keyword):
         return True
     return False
 
+def check_keywords_in_output(output, keywords, is_ordered):
+    output_lowered = output.lower()
+    if not is_ordered:
+        return all(keyword.lower() in output_lowered for keyword in keywords)
+    else:
+        i = 0
+        for keyword in keywords:
+            keyword_lowered = keyword.lower()
+            if keyword_lowered in output_lowered[i:]:
+                i += output_lowered[i:].index(keyword_lowered)
+            else:
+                return False
+        return True
+
 @api_bp.route('/submit-code', methods=['POST'])
 def submit_code():
     req_json = json.loads(request.data)
@@ -57,10 +71,8 @@ def submit_code():
         verdict = Verdict.AC
         if result.verdict == Verdict.AC:
             # AC status means code ran successfully. Now we see if output is correct.
-            for answer_keyword in testcase.answer_keywords:
-                if answer_keyword.lower() not in output.lower():
-                    verdict = Verdict.WA
-                    break
+            if not check_keywords_in_output(output, testcase.answer_keywords, testcase.is_ordered):
+                verdict = Verdict.WA
         else:
             # TLE, MLE, etc.
             verdict = result.verdict

@@ -39,6 +39,7 @@ class Testcase(db.Model):
     task_id = db.Column(db.ForeignKey('task.id'))
     input = db.Column(db.TEXT)
     answer_keywords = db.Column(db.ARRAY(db.TEXT))
+    is_ordered = db.Column(db.BOOLEAN, nullable=False, server_default='false')  # Whether answer keywords are ordered.
     
     task = db.relationship('Task', back_populates='testcases')
     testcase_results = db.relationship('TestcaseResult', back_populates='testcase', cascade='all, delete-orphan')
