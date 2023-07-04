@@ -115,7 +115,7 @@
                     {% endif %}
                 </td>
                 <td style="white-space:pre-wrap;" class="text-break consolas">{{ testcase_result.testcase.input }}</td>
-                <td style="white-space:pre-wrap;" class="text-break consolas">{{ testcase_result.testcase.answer_keywords }} {% if testcase_result.testcase.is_ordered %} <span class="text-muted">(ordered)</span> {% endif %}</td>
+                <td style="white-space:pre-wrap;" class="text-break consolas">{{ testcase_result.testcase.answer_keywords }} {% if testcase_result.testcase.is_ordered -%} <span class="text-muted">(ordered)</span> {%- endif %}</td>
                 <td style="white-space:pre-wrap;" class="text-break consolas">{{ testcase_result.output }}</td>
             </tr>
             {% endfor %}
