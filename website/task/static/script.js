@@ -53,7 +53,7 @@ window.onpageshow = () => {
         editor.setTheme("ace/theme/textmate")
         editor.session.setMode("ace/mode/python")
         editor.session.setUseWrapMode(true)
-        editor.setOptions({maxLines: 15, minLines: 15})
+        editor.setOptions({maxLines: 30, minLines: 30})
         
         let textarea = $('#user-code').hide()
     
