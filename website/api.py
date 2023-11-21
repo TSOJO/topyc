@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 from isolate_wrapper import IsolateSandbox, SourceCode, Language, Verdict
-from config import TIME_LIMIT, MEMORY_LIMIT, LANGUAGE
+from config import TIME_LIMIT, MEMORY_LIMIT, LANGUAGE, OUTPUT_MAX_LENGTH
 from website.model import db, Task, Submission, TestcaseResult, User, Group
 
 api_bp = Blueprint('api_bp', __name__)
@@ -90,7 +90,7 @@ def submit_code():
             TestcaseResult(
                 testcase=testcase,
                 verdict=verdict,
-                output=output,
+                output=output[:OUTPUT_MAX_LENGTH],
                 message=result.message
             )
         )
