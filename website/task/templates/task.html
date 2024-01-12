@@ -11,6 +11,15 @@
                 </div>
                 {% if current_user.is_admin %}
                 <div>
+                    {% if previous_task %}
+                    <a href="{{ url_for('task_bp.task', module_number=previous_task.module.number, task_number=previous_task.number) }}" class="link-secondary text-decoration-none">&larr; Previous</a>
+                    {% endif %}
+                    {% if previous_task and next_task %}
+                    &nbsp;|&nbsp;
+                    {% endif %}
+                    {% if next_task %}
+                    <a href="{{ url_for('task_bp.task', module_number=next_task.module.number, task_number=next_task.number) }}" class="link-primary text-decoration-none">Next &rarr;</a>
+                    {% endif %}
                     <a href="{{ url_for('admin_bp.edit_task', task_id=task.id) }}" class="btn btn-secondary">Edit</a>
                 </div>
                 {% endif %}
