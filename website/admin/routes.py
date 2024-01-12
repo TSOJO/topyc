@@ -350,6 +350,11 @@ def edit_task(task_id):
         task.number = request.form['number']
         task.name = request.form['name']
         task.description = request.form['description']
+        raw_hint = request.form['hint']
+        if raw_hint.strip():
+            task.hint = raw_hint
+        else:
+            task.hint = None
         raw_required_keywords = request.form['required_keywords'].split('\n')
         task.required_keywords = [x.strip() for x in raw_required_keywords]
         

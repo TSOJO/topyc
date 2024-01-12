@@ -12,6 +12,7 @@ class Task(db.Model):
     number = db.Column(db.INTEGER, nullable=False)
     name = db.Column(db.TEXT)
     description = db.Column(db.TEXT)
+    hint = db.Column(db.TEXT)
     required_keywords = db.Column(db.ARRAY(db.TEXT))
     
     module = db.relationship('Module', back_populates='tasks')
