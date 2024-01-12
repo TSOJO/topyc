@@ -138,7 +138,7 @@ def get_group_excel(group):
         for task in sorted(module.tasks, key=lambda t: t.number):
             sorted_tasks.append(task)
     
-    ws.append([''] + [f'{task.module.number}.{task.number}: {task.name}' for task in sorted_tasks])
+    ws.append(['Email', 'Correct tasks'] + [f'{task.module.number}.{task.number}: {task.name}' for task in sorted_tasks])
     
     for user in sorted(group.users, key=lambda u: u.email):
         correct_tasks = db.session.query(Task) \
@@ -153,6 +153,7 @@ def get_group_excel(group):
                                             .distinct()
         
         user_row = [user.email]
+        user_row.append(str(correct_tasks.count()))
         for task in sorted_tasks:
             if task in correct_tasks:
                 user_row.append('Correct')
