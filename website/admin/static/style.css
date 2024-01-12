@@ -4,3 +4,27 @@
     width: 100%;
     font-size: 20px;
 }
+
+.progress-table {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.progress-table>table>thead>tr>th {
+    position: sticky;
+    top: 0;
+    background-color: rgb(245, 245, 245);
+    z-index: 1;
+}
+
+.progress-table>table>thead>tr>th:first-child,
+.progress-table>table>tbody>tr>th:first-child {
+    position: sticky;
+    left: 0;
+    background-color: rgb(245, 245, 245);
+    z-index: 2;
+}
+
+.progress-table>table>thead>tr>th:first-child {
+    z-index: 3;
+}

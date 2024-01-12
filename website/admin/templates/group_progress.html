@@ -9,8 +9,8 @@
     <a href="{{ url_for('admin_bp.download_group_excel', group_id=group.id) }}" class="btn btn-primary">Download .xlsx</a>
 </div>
 <small>Click on ticks/crosses to see attempts.</small>
-<div class="table-responsive">
-    <table class="table table-bordered sticky-left-column">
+<div class="progress-table">
+    <table class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th scope="col">
@@ -30,7 +30,7 @@
         <tbody>
             {% for user in group.users | sort(attribute="name") %}
             <tr>
-                <th scope="col">
+                <th scope="row">
                     <table>
                         <tbody>
                             <tr>
