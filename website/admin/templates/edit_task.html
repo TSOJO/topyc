@@ -4,7 +4,7 @@
 {% block content %}
 <div class="d-flex justify-content-between mb-2">
     <div>
-        <h3>{{ task.module.number }}.{{ task.number }}: {{ task.name if task.name }}</h3>
+        <h3><a class="text-decoration-none" href="{{ url_for('task_bp.task', module_number=task.module.number, task_number=task.number) }}">{{ task.module.number }}.{{ task.number }}: {{ task.name if task.name }}</a></h3>
     </div>
     <div>
         <div class="modal fade" id="delete-task-modal" tabindex="-1" aria-labelledby="delete-task-modal-label" aria-hidden="true">
@@ -65,7 +65,7 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="hint" class="form-label">Hint (optional)</label>
+            <label for="hint" class="form-label">Hint</label>
             <textarea id="hint" class="form-control consolas" name="hint" rows="5">{{ task.hint if task.hint }}</textarea>
             <div class="form-text">Leave blank for no hints.</div>
         </div>
