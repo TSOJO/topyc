@@ -9,20 +9,19 @@
                 <div>
                     <h3><small class="text-muted">{{ task.module.number }}.{{ task.number }}</small> {{ task.name if task.name }}</h3>
                 </div>
-                {% if current_user.is_admin %}
                 <div>
-                    {% if previous_task %}
-                    <a href="{{ url_for('task_bp.task', module_number=previous_task.module.number, task_number=previous_task.number) }}" class="link-secondary text-decoration-none">&larr; Previous</a>
-                    {% endif %}
-                    {% if previous_task and next_task %}
-                    &nbsp;|&nbsp;
-                    {% endif %}
-                    {% if next_task %}
-                    <a href="{{ url_for('task_bp.task', module_number=next_task.module.number, task_number=next_task.number) }}" class="link-primary text-decoration-none">Next &rarr;</a>
-                    {% endif %}
+                    <div class="btn-group" role="group">
+                        {% if previous_task %}
+                        <a href="{{ url_for('task_bp.task', module_number=previous_task.module.number, task_number=previous_task.number) }}" class="btn btn-outline-secondary">&larr; Previous</a>
+                        {% endif %}
+                        {% if next_task %}
+                        <a href="{{ url_for('task_bp.task', module_number=next_task.module.number, task_number=next_task.number) }}" class="btn btn-outline-primary">Next &rarr;</a>
+                        {% endif %}
+                    </div>
+                    {% if current_user.is_admin %}
                     <a href="{{ url_for('admin_bp.edit_task', task_id=task.id) }}" class="btn btn-secondary">Edit</a>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
             <md-block>{{ task.description | safe if task.description }}</md-block>
             {% if task.required_keywords != [''] %}

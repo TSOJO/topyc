@@ -56,12 +56,6 @@ def init_app():
         
     #     if app.config['DEV']:
     #         insert_debug_db(db)
-            # from website.model import Task, Module, Testcase
-            
-            # t = Task.query.get(1)
-            # db.session.delete(t)
-            # db.session.commit()
-            # # print(Task.query.get(1).testcases[0].answer_keywords)
     
     return app
 
