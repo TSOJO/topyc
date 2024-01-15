@@ -132,6 +132,34 @@ def get_group_excel(group):
     wb = Workbook()
     ws = wb.active
     
+    correct_tasks = {}
+    attempted_tasks = {}
+    
+    all_user_tasks = db.session.query(User, Task) \
+                                    .select_from(User) \
+                                    .join(Submission) \
+                                    .join(Task) \
+                                    .join(Group) \
+                                    .filter(Group.id == group.id)
+                                    
+    correct_user_tasks = all_user_tasks.filter(Submission.overall_verdict == Verdict.AC).distinct()
+    for user, task in correct_user_tasks:
+        if user.id not in correct_tasks:
+            correct_tasks[user.id] = set()
+        correct_tasks[user.id].add(task)
+        
+    # Attempted means the user has submitted something. May or may not be correct.
+    # If user has not submitted anything to the task, then the Task will not be joined as it is joined from Submission.
+    attempted_user_tasks = all_user_tasks.distinct()
+    for user, task in attempted_user_tasks:
+        if user.id not in attempted_tasks:
+            attempted_tasks[user.id] = set()
+        attempted_tasks[user.id].add(task)
+    
+    # Now we know: if a task is in correct_tasks, then user has completed it.
+    # If not, and it is in attempted_tasks, then it is wrong.
+    # If still not, then the user has not attempted it.
+    
     modules = Module.query.order_by(Module.number).all()
     sorted_tasks = []
     for module in modules:
@@ -140,29 +168,18 @@ def get_group_excel(group):
     
     ws.append(['Email', 'Correct tasks'] + [f'{task.module.number}.{task.number}: {task.name}' for task in sorted_tasks])
     
-    for user in sorted(group.users, key=lambda u: u.email):
-        correct_tasks = db.session.query(Task) \
-                                            .join(Submission) \
-                                            .filter(Submission.user_id == user.id,
-                                                    Submission.overall_verdict == Verdict.AC) \
-                                            .distinct()
-        tasks_with_submissions = db.session.query(Task) \
-                                            .join(Submission) \
-                                            .filter(Task.submissions,
-                                                    Submission.user_id == user.id) \
-                                            .distinct()
-        
+    for user in sorted(group.users, key=lambda u: u.email):        
         user_row = [user.email]
-        user_row.append(str(correct_tasks.count()))
+        user_row.append(len(correct_tasks[user.id]))
         for task in sorted_tasks:
-            if task in correct_tasks:
+            if task in correct_tasks[user.id]:
                 user_row.append('Correct')
-            elif task in tasks_with_submissions:
+            elif task in attempted_tasks[user.id]:
                 user_row.append('Attempted')
             else:
                 user_row.append('Not attempted')
         ws.append(user_row)
-    
+        
     return wb
 
 @admin_bp.route('/group/<group_id>/download')
@@ -270,7 +287,11 @@ def group_progress(group_id):
         if user.id not in attempted_tasks:
             attempted_tasks[user.id] = set()
         attempted_tasks[user.id].add(task)
-        
+    
+    # Now we know: if a task is in correct_tasks, then user has completed it.
+    # If not, and it is in attempted_tasks, then it is wrong.
+    # If still not, then the user has not attempted it.
+    
     verdict_map = {v.name: v.value for v in Verdict}
     verdict_map['AC'] = 'Correct'
     
