@@ -2,6 +2,15 @@
 {% block title %}{{ lesson.module.number }}. {{ lesson.module.name }}{% endblock title %}
 
 {% block content %}
-<h3>{{ lesson.module.number }}. {{ lesson.module.name }}</h3>
+<div class="d-flex justify-content-between">
+    <div>
+        <h3>{{ lesson.module.number }}. {{ lesson.module.name }}</h3>
+    </div>
+    <div>
+        {% if current_user.is_admin %}
+        <a href="{{ url_for('admin_bp.edit_lesson', lesson_id=lesson.id) }}" class="btn btn-secondary">Edit</a>
+        {% endif %}
+    </div>
+</div>
 <md-block id="md">{{ lesson.text | safe if lesson.text }}</md-block>
 {% endblock content %}
