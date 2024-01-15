@@ -4,7 +4,7 @@
 {% block content %}
 <div class="d-flex justify-content-between mb-2">
     <div>
-        <h3>Lesson: {{ lesson.module.number}}. {{ lesson.module.name }}</h3>
+        <h3><a class="text-decoration-none" href="{{ url_for('task_bp.lesson', module_number=lesson.module.number) }}">{{ lesson.module.number}}. {{ lesson.module.name }}</a></h3>
     </div>
     <div>
         <div class="modal fade" id="delete-lesson-modal" tabindex="-1" aria-labelledby="delete-lesson-modal-label" aria-hidden="true">
