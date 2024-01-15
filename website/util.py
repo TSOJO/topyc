@@ -5,7 +5,7 @@ import ssl
 import smtplib
 
 from config import GMAIL_EMAIL, GMAIL_APP_PASSWORD, PASSWORD_LENGTH
-from website.model import Task, Module
+from website.model import Task, Lesson, Module
 
 def check_tonbridge_email(email):
     return email.endswith('@tonbridge-school.org')
@@ -35,18 +35,26 @@ def send_email(to_email, subject, body):
             msg=email_message.as_string()
         )
 
-def get_previous_task(current_task):
+def get_previous_and_next_task(current_task):
     sorted_tasks = Task.query.join(Module, Task.module).order_by(Module.number.asc(), Task.number.asc()).all()
-    index = sorted_tasks.index(current_task)
+    sorted_lessons = Lesson.query.join(Module, Lesson.module).order_by(Module.number.asc()).all()
+    
+    sorted_tasks_and_lessons = []
+    for t in sorted_tasks:
+        while len(sorted_lessons) > 0 and sorted_lessons[0].module.number <= t.module.number:
+            sorted_tasks_and_lessons.append(sorted_lessons.pop(0))
+        sorted_tasks_and_lessons.append(t)
+    sorted_tasks_and_lessons.extend(sorted_lessons)
+    
+    index = sorted_tasks_and_lessons.index(current_task)
+    previous = None
     if index > 0:
-        return sorted_tasks[index-1]
-    else:
-        return None
+        previous = sorted_tasks_and_lessons[index-1]
+    next_ = None
+    if index < len(sorted_tasks_and_lessons) - 1:
+        next_ = sorted_tasks_and_lessons[index+1]
+    
+    return previous, next_
 
-def get_next_task(current_task):
-    sorted_tasks = Task.query.join(Module, Task.module).order_by(Module.number.asc(), Task.number.asc()).all()
-    index = sorted_tasks.index(current_task)
-    if index < len(sorted_tasks) - 1:
-        return sorted_tasks[index+1]
-    else:
-        return None
+def is_lesson(x):
+    return isinstance(x, Lesson)

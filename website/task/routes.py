@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, abort, url_for
 from flask_login import current_user
 
 from website.model import db, Task, Lesson
-from website.util import get_previous_task, get_next_task
+from website.util import get_previous_and_next_task, is_lesson
 from isolate_wrapper import Verdict
 
 task_bp = Blueprint(
@@ -26,14 +26,14 @@ def task(module_number, task_number):
         abort(403, description='The module to which this task belongs is marked as invisible by an admin.')
         
     verdict_map = {v.name: v.value for v in Verdict}
-    previous_task = get_previous_task(task)
-    next_task = get_next_task(task)
+    previous_task, next_task = get_previous_and_next_task(task)
     return render_template(
         'task.html',
         task=task,
         verdict_map=verdict_map,
         previous_task=previous_task,
-        next_task=next_task
+        next_task=next_task,
+        is_lesson=is_lesson
     )
 
 @task_bp.route('/<module_number>/lesson')
@@ -43,4 +43,12 @@ def lesson(module_number):
             Lesson.module.has(number=module_number)
         )
     )
-    return render_template('lesson.html', lesson=lesson)
+    previous_task, next_task = get_previous_and_next_task(lesson)
+    
+    return render_template(
+        'lesson.html',
+        lesson=lesson,
+        previous_task=previous_task,
+        next_task=next_task,
+        is_lesson=is_lesson
+    )

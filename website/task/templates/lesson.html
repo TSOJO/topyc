@@ -7,6 +7,30 @@
         <h3>{{ lesson.module.number }}. {{ lesson.module.name }}</h3>
     </div>
     <div>
+        <div class="btn-group" role="group">
+            {% if previous_task %}
+            {% if is_lesson(previous_task) %}
+            <a href="{{ url_for('task_bp.lesson', module_number=previous_task.module.number) }}" class="btn btn-outline-secondary">
+            {% else %}
+            <a href="{{ url_for('task_bp.task', module_number=previous_task.module.number, task_number=previous_task.number) }}" class="btn btn-outline-secondary">
+            {% endif %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                    <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+                </svg>
+            </a>
+            {% endif %}
+            {% if next_task %}
+            {% if is_lesson(next_task) %}
+            <a href="{{ url_for('task_bp.lesson', module_number=next_task.module.number) }}" class="btn btn-outline-secondary">
+            {% else %}
+            <a href="{{ url_for('task_bp.task', module_number=next_task.module.number, task_number=next_task.number) }}" class="btn btn-outline-secondary">
+            {% endif %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                    <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                </svg>
+            </a>
+            {% endif %}
+        </div>
         {% if current_user.is_admin %}
         <a href="{{ url_for('admin_bp.edit_lesson', lesson_id=lesson.id) }}" class="btn btn-secondary">Edit</a>
         {% endif %}
