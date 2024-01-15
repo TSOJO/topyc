@@ -10,7 +10,7 @@
             {% if current_user.is_admin or module.is_visible %}
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                    <button class="accordion-button {% if module in user_done_modules %} collapsed {% endif %} row mx-0" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
+                    <button class="accordion-button {% if module in user_done_modules and module.tasks | length > 0 %} collapsed {% endif %} row mx-0" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
                         <div class="col-10 d-flex align-items-center">
                             <span class="col-auto me-2">
                                 {{ module.number }}. {{ module.name }}
@@ -33,7 +33,7 @@
                         </span>
                     </button>
                 </h2>
-                <div id="module{{ module.id }}" class="accordion-collapse collapse {% if module not in user_done_modules %} show {% endif %}">
+                <div id="module{{ module.id }}" class="accordion-collapse collapse {% if not (module in user_done_modules and module.tasks | length > 0) %} show {% endif %}">
                     <div class="accordion-body">
                         {% if current_user.is_admin %}
                         <div class="modal fade" id="edit-module{{ module.id }}-modal" tabindex="-1" aria-labelledby="edit-module{{ module.id }}-modal-label" aria-hidden="true">
