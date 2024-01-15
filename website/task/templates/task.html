@@ -40,7 +40,7 @@
                 </div>
             </div>
             <md-block>{{ task.description | safe if task.description }}</md-block>
-            {% if task.required_keywords != [''] %}
+            {% if task.required_keywords and task.required_keywords != [''] %}
             <p>You must use the following in your program:</p>
             <div class="mb-3">
                 <ul class="list-group" id="keywords">
