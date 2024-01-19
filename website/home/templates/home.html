@@ -7,7 +7,7 @@
     <div class="col-lg-6 mx-auto">
         <div class="accordion" id="task-listing">
             {% for module in modules %}
-            {% if current_user.is_admin or module.is_visible %}
+            {% if current_user.is_admin or current_user.group in module.visible_to %}
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button {% if module in user_done_modules and module.tasks | length > 0 %} collapsed {% endif %} row mx-0" type="button" data-bs-toggle="collapse" data-bs-target="#module{{ module.id }}">
@@ -15,17 +15,6 @@
                             <span class="col-auto me-2">
                                 {{ module.number }}. {{ module.name }}
                             </span>
-                            {% if current_user.is_admin %}
-                            <span class="col">
-                                <span class="badge bg-{%- if module.is_visible -%}success{%- else -%}danger{%- endif -%}">
-                                    {% if module.is_visible %}
-                                    VISIBLE
-                                    {% else %}
-                                    INVISIBLE
-                                    {% endif %}
-                                </span>
-                            </span>
-                            {% endif %}
                         </div>
                         {% set user_done_in_module = user_done_tasks | selectattr('module', 'equalto', module) | list | length %}
                         <span class="badge bg-{%- if user_done_in_module == module.tasks | length -%}success{%- else -%}secondary{%- endif %} rounded-pill col-auto">
@@ -54,11 +43,16 @@
                                                 <label for="module_name" class="form-label">Module name</label>
                                                 <input type="text" class="form-control" name="module_name" value="{{ module.name }}" id="module_name" required />
                                             </div>
-                                            <div class="form-check">
-                                                <label for="module_visible" class="form-check-label">
-                                                    Visible?
-                                                </label>
-                                                <input type="checkbox" class="form-check-input" name="module_visible" value="" id="module_visible" {%- if module.is_visible -%}checked{%- endif -%}>
+                                            <div>
+                                                <label>Visible to:</label>
+                                                {% for group in groups %}
+                                                <div class="form-check">
+                                                    <label for="module_visible_to{{ group.id }}" class="form-check-label">
+                                                        {{ group.name }}
+                                                    </label>
+                                                    <input type="checkbox" class="form-check-input" name="module_visible_to" value="{{ group.id }}" id="module_visible_to{{ group.id }}" {%- if group in module.visible_to -%}checked{%- endif -%}>
+                                                </div>
+                                                {% endfor %}
                                             </div>
                                         </div>
                                         <div class="modal-footer">

@@ -26,12 +26,20 @@ class Lesson(db.Model):
     
     module = db.relationship('Module', back_populates='lesson')
 
+module_group_visibility = db.Table(
+    'module_group',
+    db.Column('module_id', db.ForeignKey('module.id'), primary_key=True),
+    db.Column('group_id', db.ForeignKey('group.id'), primary_key=True)
+)
+
 class Module(db.Model):
+    __tablename__ = 'module'
+    
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     number = db.Column(db.INTEGER, nullable=False)
     name = db.Column(db.TEXT)
-    is_visible = db.Column(db.BOOLEAN, nullable=False)
     
+    visible_to = db.relationship('Group', secondary=module_group_visibility)
     tasks = db.relationship('Task', back_populates='module', cascade='all, delete-orphan')
     lesson = db.relationship('Lesson', uselist=False, back_populates='module', cascade='all, delete-orphan')
 
@@ -57,6 +65,8 @@ class User(db.Model, UserMixin):
     submissions = db.relationship('Submission', back_populates='user', cascade='all, delete-orphan')
 
 class Group(db.Model):
+    __tablename__ = 'group'
+    
     id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     name = db.Column(db.TEXT)
     
@@ -84,3 +94,4 @@ class TestcaseResult(db.Model):
     
     submission = db.relationship('Submission', back_populates='testcase_results')
     testcase = db.relationship('Testcase', back_populates='testcase_results')
+

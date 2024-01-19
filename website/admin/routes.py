@@ -312,8 +312,7 @@ def new_module():
     
     module = Module(
         number=module_number,
-        name=module_name,
-        is_visible=True
+        name=module_name
     )
     
     db.session.add(module)
@@ -326,13 +325,13 @@ def edit_module():
     module_id = request.form['module_id']
     module_number = request.form['module_number']
     module_name = request.form['module_name']
-    module_visible = 'module_visible' in request.form
+    module_visible_to = request.form.getlist('module_visible_to')
     
     module = Module.query.get_or_404(module_id)
     module.number = module_number
     module.name = module_name
-    module.is_visible = module_visible
-
+    module.visible_to = Group.query.filter(Group.id.in_(module_visible_to)).all()
+    
     db.session.commit()
     flash('Module saved', 'success')
     return redirect(url_for('home_bp.home'))

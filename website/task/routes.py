@@ -22,8 +22,8 @@ def task(module_number, task_number):
         )
     )
     
-    if not (current_user.is_admin or task.module.is_visible):
-        abort(403, description='The module to which this task belongs is marked as invisible by an admin.')
+    if not (current_user.is_admin or current_user.group in task.module.visible_to):
+        abort(403, description='The module to which this task belongs is marked as invisible to you by an admin.')
         
     verdict_map = {v.name: v.value for v in Verdict}
     previous_task, next_task = get_previous_and_next_task(task)
