@@ -2,11 +2,23 @@
 {% block title %}Users{% endblock title %}
 
 {% block content %}
-<h3>Users</h3>
+<div class="d-flex justify-content-between">
+    <h3>Users</h3>
+    <form method="get">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="s" placeholder="Search name" />
+            <button class="btn btn-primary" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+            </button>
+        </div>
+    </form>
+</div>
 {% for page in users_page.iter_pages() %}
 {% if page %}
 {% if page != users_page.page %}
-<a href="{{ url_for('admin_bp.users', page=page, per_page=request.args.get('per_page')) }}">{{ page }}</a>
+<a href="{{ url_for('admin_bp.users', page=page, per_page=request.args.get('per_page'), s=request.args.get('s', default='')) }}">{{ page }}</a>
 {% else %}
 <span class="fw-bold">{{ page }}</span>
 {% endif %}

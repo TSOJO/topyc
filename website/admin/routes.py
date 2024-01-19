@@ -71,8 +71,14 @@ def users():
             
         db.session.commit()
         flash('Saved', 'success')
-        
-    users_page = db.paginate(db.select(User).order_by(User.email))  # defaults to 20 per page and gets page number from `request.args`
+    
+    search = request.args.get('s', default='')
+    
+    users_page = db.paginate( \
+        db.select(User) \
+            .filter(User.name.icontains(search)) \
+            .order_by(User.email) \
+    )  # defaults to 20 per page and gets page number from `request.args`
     groups = Group.query.all()
     return render_template('users.html', users_page=users_page, groups=groups)
 
