@@ -45,14 +45,21 @@
                                             </div>
                                             <div>
                                                 <label>Visible to:</label>
+                                                <div class="form-check">
+                                                    <label for="select-all" class="form-check-label">
+                                                        <i>Select/Deselect all</i>
+                                                    </label>
+                                                    <input type="checkbox" class="form-check-input" id="select-all" {%- if module.visible_to | length == groups | length -%}checked{%- endif -%}>
+                                                </div>
                                                 {% for group in groups %}
                                                 <div class="form-check">
                                                     <label for="module_visible_to{{ group.id }}" class="form-check-label">
                                                         {{ group.name }}
                                                     </label>
-                                                    <input type="checkbox" class="form-check-input" name="module_visible_to" value="{{ group.id }}" id="module_visible_to{{ group.id }}" {%- if group in module.visible_to -%}checked{%- endif -%}>
+                                                    <input type="checkbox" class="form-check-input group-visible-check" name="module_visible_to" value="{{ group.id }}" id="module_visible_to{{ group.id }}" {%- if group in module.visible_to -%}checked{%- endif -%}>
                                                 </div>
                                                 {% endfor %}
+                                                
                                             </div>
                                         </div>
                                         <div class="modal-footer">
