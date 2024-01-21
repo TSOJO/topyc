@@ -1,11 +1,11 @@
-$('#select-all').click(function() {
+$('.select-all').click(() => {
     if (this.checked) {
-        $('.group-visible-check').each(function() {
-            this.checked = true;                        
+        $(this).parent().parent().find('.group-visible-check').each(() => {
+            this.checked = true
         });
     } else {
-       $('.group-visible-check').each(function() {
-            this.checked = false;                        
+        $(this).parent().parent().find('.group-visible-check').each(() => {
+            this.checked = false
         });
-    } 
+    }
  });
